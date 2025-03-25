@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+E:\Jan Queralt\JocDelPingui\ElJocDelPingui - repo\.metadata\.plugins\org.eclipse.jdt.core
+1372387392.index
+113558702.index
+1865797976.index
