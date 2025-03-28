@@ -19,7 +19,7 @@ public Jugador (String nom, String color) {
 //GETTERS
 
 	public String getnom() {return nom;}		
-	public String getcolor() {return color;}
+	public String getcolor() {return color;}		
 	public int getposicio() {return posicio;}
 	public Inventario getInventario() {return Inventario;}
 	
@@ -31,6 +31,4 @@ public Jugador (String nom, String color) {
 	public void setposicio (int posicio) {this.posicio = posicio;}
 	public void setInventario (Inventario Inventario) {this.Inventario = Inventario;}
 	
-	
-
 }
