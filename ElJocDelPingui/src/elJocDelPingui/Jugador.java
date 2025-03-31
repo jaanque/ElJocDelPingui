@@ -13,9 +13,15 @@ public Jugador (String nom, String color) {
 	this.nom = nom ;			//Fica el nom.
 	this.color = color;			//Fica el color. 
 	this.posicio = posicio;		//Fica posicio inicial del jugador.	
-	this.Inventario = new Inventario();	//Crea el inventario del jugador. 
+	
 }
 	
+public void actualitzarInventari (Inventario Inventario) {//--------|
+	this.Inventario.setbolesNeu(Inventario.getbolesNeu()); //		|
+	this.Inventario.setPeixos(Inventario.getpeixos()); //			|--> ACTUALITZA INVENTARIO JUGADOR
+	this.Inventario.setdaus(Inventario.getdaus()); //---------------|
+
+}
 //GETTERS
 
 	public String getnom() {return nom;}		
