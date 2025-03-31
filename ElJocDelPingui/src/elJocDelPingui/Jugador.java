@@ -1,35 +1,40 @@
 package elJocDelPingui;
-import java.util.ArrayList;
-import java.util.Scanner;
 
+//CLASE
 public class Jugador {
 
-    public static ArrayList<String> demanarJugadors(Scanner s) {
-        int numjugadors = 0;
-        ArrayList<String> nomjugadors = new ArrayList<>();
+	private String nom; 			//Nom del jugador .
+	private String color;			//Color del jugador.
+	private int posicio;			//Posició del jugador.
+	private Inventario Inventario;  //Inventario del jugador. 
+	
+//CONSTRUCTOR CLASE 
+public Jugador (String nom, String color) {
+	this.nom = nom ;			//Fica el nom.
+	this.color = color;			//Fica el color. 
+	this.posicio = posicio;		//Fica posicio inicial del jugador.	
+	
+}
+	
+public void actualitzarInventari (Inventario Inventario) {//--------|
+	this.Inventario.setbolesNeu(Inventario.getbolesNeu()); //		|
+	this.Inventario.setPeixos(Inventario.getpeixos()); //			|--> ACTUALITZA INVENTARIO JUGADOR
+	this.Inventario.setdaus(Inventario.getdaus()); //---------------|
 
-        // BUCLE PREGUNTAR NUMERO DE JUGADORS
-        while (numjugadors < 1 || numjugadors > 4) {
-            System.out.println("Cuants jugadors participaran en la partida? (1-4)");
-            if (s.hasNextInt()) {
-                numjugadors = s.nextInt();
-                s.nextLine(); // LLIMPIAR BUFFER PER EVITAR ERROR 
-                if (numjugadors < 1 || numjugadors > 4) {
-                    System.out.println("Numero invalid, entre 1 i 4 ");
-                }
-            } else {
-                System.out.println("Entri numero valid");
-                s.next(); // LLIMPIAR ENTRADA 
-            }
-        }
+}
+//GETTERS
 
-        // BUCLE ENTRADA NOM DE JUGADORS
-        for (int i = 1; i <= numjugadors; i++) {
-            System.out.println("Entri el nom del jugador " + i + " : ");
-            String nom = s.nextLine();
-            nomjugadors.add(nom);
-        }
-
-        return nomjugadors;
-    }
+	public String getnom() {return nom;}		
+	public String getcolor() {return color;}		
+	public int getposicio() {return posicio;}
+	public Inventario getInventario() {return Inventario;}
+	
+	
+//SETTERS
+    	
+	public void setnom (String nom) {this.nom = nom;}
+	public void setcolor (String color) {this.color = color;}
+	public void setposicio (int posicio) {this.posicio = posicio;}
+	public void setInventario (Inventario Inventario) {this.Inventario = Inventario;}
+	
 }

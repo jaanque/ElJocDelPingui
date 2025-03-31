@@ -9,16 +9,16 @@ public class Inventario{
 	private int peixos;		//Peixos Jugador. 
 	
 //CONSTRUCTOR INVETARI 
-public Inventario() {
-	this.bolesNeu = 0 ;  //Boles de Inici.
-	this.daus = 0; 		//Daus Inici.										//COMENÇEM CADA INVENTARI AMB 0 OBJECTES DE CADA 
-	this.peixos = 0; 	//Peixos per inici.
+public Inventario(int bolesNeu,int daus,int peixos) {
+	this.bolesNeu = bolesNeu ;  //Boles de Inici.
+	this.daus = daus; 		//Daus Inici.										//COMENÇEM CADA INVENTARI AMB 0 OBJECTES DE CADA 
+	this.peixos = peixos; 	//Peixos per inici.
 	}
 
 	//GETTERS 
 	public int getbolesNeu() {return bolesNeu;}
-	public int daus() {return daus;}
-	public int peixos() {return peixos;}
+	public int getdaus() {return daus;}
+	public int getpeixos() {return peixos;}
 	
 	//SETTERS 
 	public void setbolesNeu(int bolesNeu) {this.bolesNeu = bolesNeu;} 
