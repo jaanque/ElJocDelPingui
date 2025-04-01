@@ -22,6 +22,7 @@ public void actualitzarInventari (Inventario Inventario) {//--------|
 	this.Inventario.setdaus(Inventario.getdaus()); //---------------|
 
 }
+
 //GETTERS
 
 	public String getnom() {return nom;}		
