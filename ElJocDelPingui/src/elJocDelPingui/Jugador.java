@@ -29,6 +29,10 @@ public void actualitzarInventari (Inventario Inventario) {//--------|
 	public int getposicio() {return posicio;}
 	public Inventario getInventario() {return Inventario;}
 	
+	public Object getSueloQuebradizo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 //SETTERS
     	
