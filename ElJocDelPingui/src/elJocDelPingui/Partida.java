@@ -1,5 +1,5 @@
 package elJocDelPingui;
 
-public class partida {
+public class Partida {
 
 }
