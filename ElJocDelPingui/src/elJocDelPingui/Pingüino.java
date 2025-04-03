@@ -15,9 +15,9 @@ public class Pingüino {
         this.posicio = 0; // Posición inicial del jugador
     }
 
-    // MÉTODO PARA ACTUALIZAR INVENTARIO (opcional, no es la mejor forma)
+    // ACTUALITZAR INVENTARI
     public void actualitzarInventari(Inventario nuevoInventario) {
-        if (nuevoInventario != null) { // Verifica que el inventario no sea nulo
+        if (nuevoInventario != null) { // Verifica que el inventari sigui vuit
             this.inventario.setbolesNeu(nuevoInventario.getbolesNeu());  
             this.inventario.setPeixos(nuevoInventario.getpeixos());  
             this.inventario.setdaus(nuevoInventario.getdaus());  
