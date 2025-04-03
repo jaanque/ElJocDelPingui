@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Partida {
-    private ArrayList<Pingüino> jugadors;
+    private static ArrayList<Pingüino> jugadors;
     private static final ArrayList<String> COLORS_DISPONIBLES = 
         new ArrayList<>(Arrays.asList("blau", "verd", "groc", "vermell"));
 
@@ -13,7 +13,7 @@ public class Partida {
         this.jugadors = new ArrayList<>();
     }
 
-    public void iniciarPartida() {
+    public static void iniciarPartida() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Quants jugadors volen jugar? ");
         
