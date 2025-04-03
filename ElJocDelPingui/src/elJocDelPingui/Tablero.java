@@ -6,7 +6,7 @@ public class Tablero {
     private int filas;
     private int columnas;
     private Casilla[][] casillas;
-    private List<Jugador> jugadores;
+    private List<Pingüino> jugadores;
     
     // Constructor
     public Tablero(int filas, int columnas) {
@@ -42,11 +42,11 @@ public class Tablero {
         this.casillas = casillas;
     }
 
-    public List<Jugador> getJugadores() {
+    public List<Pingüino> getJugadores() {
         return jugadores;
     }
 
-    public void setJugadores(List<Jugador> jugadores) {
+    public void setJugadores(List<Pingüino> jugadores) {
         this.jugadores = jugadores;
     }
 }

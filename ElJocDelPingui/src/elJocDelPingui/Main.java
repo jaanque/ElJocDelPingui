@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 
-public class PartidaMain {
+public class Main {
 	 public static void main(String[] args) {
 	 
 	 Scanner s = new Scanner(System.in);
@@ -32,7 +32,7 @@ public class PartidaMain {
 	//
 	    switch (opcion) {//
 	        case 1://
-	            System.out.println("Has escollit jugar.");//														|
+                Partida.iniciarPartida();
 	            break;//																							|
 	        case 2://																								|
 	            System.out.println("Aquí tens les regles del joc...");//											|
@@ -41,11 +41,6 @@ public class PartidaMain {
 	            System.out.println("Sortint del joc. Fins aviat!");//												|
 	            break;//																							|
 	    } //--------------------------------------------------------------------------------------------------------|
-	    
-	    
-	    
-	    
-	    
 	    
 	}
 }
