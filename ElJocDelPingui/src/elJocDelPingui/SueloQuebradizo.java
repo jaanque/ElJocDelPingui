@@ -4,17 +4,17 @@ package elJocDelPingui;
 public class SueloQuebradizo {
 
 	private int posicio;
-	private Jugador Jugador;
+	private Pingüino Jugador;
 	
 	
 	//CONSTRUCTOR CLASE 
-	public SueloQuebradizo (int posicio, Jugador Jugador) {
+	public SueloQuebradizo (int posicio, Pingüino Jugador) {
 	
 		this.posicio = posicio;
 		this.Jugador = Jugador;
 }
 
-	public void actualizarJugador (Jugador nuevoJugador) {
+	public void actualizarJugador (Pingüino nuevoJugador) {
 		this.Jugador.setSueloQuebradizo(nuevoJugador.getSueloQuebradizo()); 
 	}
 		
