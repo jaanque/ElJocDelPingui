@@ -15,8 +15,6 @@ public class Trineo {
 	public int getposiciotrineo() {return posiciotrineo;}
 
 	//SETTERS
-		
 	public void setposiciotrineo (int posiciotrineo) {this.posiciotrineo = posiciotrineo;}
-
 	
 }
