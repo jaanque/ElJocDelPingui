@@ -29,10 +29,17 @@ public class Pingüino {
     public String getColor() { return color; }
     public int getPosicio() { return posicio; }
     public Inventario getInventario() { return inventario; }
+    public Object getSueloQuebradizo() {return null;}
+
 
     // SETTERS
     public void setNom(String nom) { this.nom = nom; }
     public void setColor(String color) { this.color = color; }
     public void setPosicio(int posicio) { this.posicio = posicio; }
     public void setInventario(Inventario inventario) { this.inventario = inventario; }
+
+	
+	public void setSueloQuebradizo(Object sueloQuebradizo) {
+		
+	}
 }
