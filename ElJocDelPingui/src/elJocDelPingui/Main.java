@@ -1,6 +1,8 @@
 package elJocDelPingui;
+
 import java.util.Scanner;
 import java.util.ArrayList;
+import elJocDelPingui.Partida;
 
 
 public class Main {
@@ -30,6 +32,8 @@ public class Main {
 	        }//
 	    }//
 	//
+	    
+	    
 	    switch (opcion) {//
 	        case 1://
                 Partida.iniciarPartida();
