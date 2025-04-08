@@ -87,8 +87,25 @@ public class Main {
         boolean juegoTerminado = false;
         
         // Crear dados
-        Dado dadoNormal = new Dado();
-        DadoEspecial dadoEspecial = new DadoEspecial();
+        Dado dado = new Dado();
+
+        // Tirar dado básico
+        int resultado = dado.tirarDadoBasico();
+        System.out.println("Resultado dado básico: " + resultado);
+
+        // Agregar dados especiales
+        dado.agregarDadoEspecial("RAPIDO");
+        dado.agregarDadoEspecial("LENTO");
+
+        // Mostrar inventario
+        dado.mostrarDadosEspeciales();
+
+        // Usar un dado especial
+        int especial = dado.usarDadoEspecial(0);
+        System.out.println("Resultado del dado especial: " + especial);
+
+        // Inventario después de usar
+        dado.mostrarDadosEspeciales();
         
         // Bucle principal del juego
         while (!juegoTerminado) {
