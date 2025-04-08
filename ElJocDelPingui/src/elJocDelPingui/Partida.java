@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Partida {
-    private static ArrayList<Pingüino> jugadors;
+    private ArrayList<Pingüino> jugadors;
     private static final ArrayList<String> COLORS_DISPONIBLES = 
         new ArrayList<>(Arrays.asList("blau", "verd", "groc", "vermell"));
 
@@ -13,7 +13,7 @@ public class Partida {
         this.jugadors = new ArrayList<>();
     }
 
-    public static void iniciarPartida() {
+    public void iniciarPartida() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Quants jugadors volen jugar? ");
         
@@ -41,21 +41,50 @@ public class Partida {
                 color = scanner.nextLine().toLowerCase();
 
                 if (colorsDisponibles.contains(color)) {
-                    colorsDisponibles.remove(color); // Esborra el color per evitar duplicats
+                    colorsDisponibles.remove(color); // BORRAR EL COLOR PER EVITAR QUE ES PODIN REPETIR A L'HORA DE ESCOLLIR-LOS 
                     break;
                 } else {
                     System.out.println("Color no disponible. Tria un dels colors indicats.");
                 }
             }
 
-            jugadors.add(new Pingüino(nom, color));
+          //CREAR JUGADOR I INICIAR EL SEU INVENTARI 
+            Pingüino jugador = new Pingüino(nom, color);
+            jugador.setInventario(new Inventario(0, 0, 0)); //SENSE OBJECTES INICIA 
+            
+            jugadors.add(jugador);
         }
 
-        System.out.println("Jugadors registrats correctament!");
+        System.out.println("\nJugadors registrats correctament!");
+        mostrarJugadores();
+    }
+
+    public void mostrarJugadores() {
+        System.out.println("\nJugadors de la partida:");
+        System.out.println("-----------------------------------------");
+        for (Pingüino jugador : jugadors) {
+            System.out.println(jugador.getNom() + " (" + jugador.getColor() + ")");
+        }
+        System.out.println("-----------------------------------------");
     }
 
     public ArrayList<Pingüino> getJugadors() {
         return jugadors;
     }
-}
 
+    public Pingüino getJugadorByNom(String nom) {
+        for (Pingüino jugador : jugadors) {
+            if (jugador.getNom().equalsIgnoreCase(nom)) {
+                return jugador;
+            }
+        }
+        return null; //NO JUGADOR = NULL 
+    }
+    public void finalizarPartida() {
+        System.out.println("\nLa partida ha finalitzat!");
+        System.out.println("Resultats finals:");
+        for (Pingüino jugador : jugadors) {
+            System.out.println(jugador.getNom() + " (" + jugador.getColor() + ") - Inventario: " + jugador.getInventario());
+        }
+    }
+}
