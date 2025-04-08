@@ -86,92 +86,94 @@ public class Main {
         int turnoActual = 0;
         boolean juegoTerminado = false;
         
-        // Crear dados
-        Dado dadoNormal = new Dado();
-        DadoEspecial dadoEspecial = new DadoEspecial();
-        
-        // Bucle principal del juego
+     // Crear objeto dado para toda la partida
+        Dado dado = new Dado();
+
         while (!juegoTerminado) {
             Pingüino jugadorActual = jugadores.get(turnoActual);
-            
+
             System.out.println("\n=========================================");
             System.out.println("Torn de " + jugadorActual.getNom() + " (" + jugadorActual.getColor() + ")");
             System.out.println("Posició actual: " + jugadorActual.getPosicio());
-            System.out.println(jugadorActual.getInventario().toString());
+            System.out.println("Inventari: " + jugadorActual.getInventario().toString());
+            dado.mostrarDadosEspeciales(); // Mostrar dados especiales del jugador
             System.out.println("-----------------------------------------");
+
             System.out.println("Què vols fer?");
             System.out.println("1. Tirar dau normal");
-            
-            																				//VENTALL OPCIONS SEGONS INVENTARIO 
-            if (jugadorActual.getInventario().getdaus() > 0) {
-                System.out.println("2. Tirar dau especial (" + jugadorActual.getInventario().getdaus() + " disponibles)");
+            if (dado.cantidadDadosEspeciales() > 0) {
+                System.out.println("2. Tirar dau especial (" + dado.cantidadDadosEspeciales() + " disponibles)");
             }
-            
             if (jugadorActual.getInventario().getbolesNeu() > 0) {
                 System.out.println("3. Llançar bola de neu (" + jugadorActual.getInventario().getbolesNeu() + " disponibles)");
             }
-            
+
             System.out.print("Escull una opció: ");
             int accion = 0;
-            																//PROBAR
             try {
                 accion = Integer.parseInt(s.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Entrada invàlida. Intentant de nou...");
                 continue;
             }
-            
-        																		//PROCESSAR ACCIO 
+
             int nuevaPosicion = jugadorActual.getPosicio();
-            
+
             switch (accion) {
-                case 1:																				 //TIRAR DAU 
-                    int resultadoDado = dadoNormal.tirarDado();
+                case 1: // Tirar dado básico
+                    int resultadoDado = dado.tirarDadoBasico();
                     nuevaPosicion = jugadorActual.avanzar(resultadoDado);
                     System.out.println("Has avançat " + resultadoDado + " caselles. Nova posició: " + nuevaPosicion);
                     break;
-                    
-                case 2: 																		//TIRAR DAU ESPECIAL SI EN TE 
-                    if (jugadorActual.getInventario().getdaus() > 0) {
-                        int resultadoEspecial = dadoEspecial.tirarDado();
-                        nuevaPosicion = jugadorActual.avanzar(resultadoEspecial);
-                        // Restar un dado del inventario
-                        jugadorActual.getInventario().setdaus(jugadorActual.getInventario().getdaus() - 1);
-                        System.out.println("Has avançat " + resultadoEspecial + " caselles amb el dau especial. Nova posició: " + nuevaPosicion);
+
+                case 2: // Tirar dado especial
+                    if (dado.cantidadDadosEspeciales() > 0) {
+                        dado.mostrarDadosEspeciales();
+                        System.out.print("Escull quin dau especial vols usar (0-" + (dado.cantidadDadosEspeciales() - 1) + "): ");
+                        int cualDado = 0;
+                        try {
+                            cualDado = Integer.parseInt(s.nextLine());
+                            int resultadoEspecial = dado.usarDadoEspecial(cualDado);
+                            if (resultadoEspecial != -1) {
+                                nuevaPosicion = jugadorActual.avanzar(resultadoEspecial);
+                                System.out.println("Has avançat " + resultadoEspecial + " caselles amb el dau especial. Nova posició: " + nuevaPosicion);
+                            } else {
+                                continue;
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada invàlida.");
+                            continue;
+                        }
                     } else {
                         System.out.println("No tens daus especials disponibles!");
-                        continue; 															//ESCOLLIR NOVA OPCIÓ 
+                        continue;
                     }
                     break;
-                    
-                case 3: 																	//TIRAR BOLA DE NEU 
+
+                case 3: // Lanzar bola de nieve
                     if (jugadorActual.getInventario().getbolesNeu() > 0) {
-                    														//LLISTA JUGADORS ALS QUE PODEM ATACAR 
                         System.out.println("A quin jugador vols llançar la bola?");
                         for (int i = 0; i < jugadores.size(); i++) {
-                            if (i != turnoActual) { 
-                                System.out.println((i+1) + ". " + jugadores.get(i).getNom() + " (" + jugadores.get(i).getColor() + ")");
+                            if (i != turnoActual) {
+                                System.out.println((i + 1) + ". " + jugadores.get(i).getNom() + " (" + jugadores.get(i).getColor() + ")");
                             }
                         }
-                        
+
                         System.out.print("Escull un jugador: ");
                         int objetivo = 0;
                         try {
                             objetivo = Integer.parseInt(s.nextLine()) - 1;
-                            
+
                             if (objetivo >= 0 && objetivo < jugadores.size() && objetivo != turnoActual) {
-                            																							//TIRAR ENRERE JUGADOR 
                                 Pingüino jugadorObjetivo = jugadores.get(objetivo);
-                                jugadorObjetivo.retroceder(2); 											//RETROCEDIR 2 CASELLES
-                                
-                                //RESTAR DEL INVENTARI LA BOLA DE NEU 
+                                jugadorObjetivo.retroceder(2);
                                 jugadorActual.getInventario().setbolesNeu(jugadorActual.getInventario().getbolesNeu() - 1);
-                                
-                                System.out.println("Has llançat una bola de neu a " + jugadorObjetivo.getNom() + 
+
+                                System.out.println("Has llançat una bola de neu a " + jugadorObjetivo.getNom() +
                                                    "! Retrocedeix 2 caselles a la posició " + jugadorObjetivo.getPosicio());
                             } else {
                                 System.out.println("Jugador invàlid. Intentant de nou...");
-                                continue;   //AL CONTINUE DEMANE NOVA ACCIÓ 
+                                continue;
                             }
                         } catch (NumberFormatException e) {
                             System.out.println("Entrada invàlida. Intentant de nou...");
@@ -179,29 +181,25 @@ public class Main {
                         }
                     } else {
                         System.out.println("No tens boles de neu disponibles!");
-                        continue; 
+                        continue;
                     }
                     break;
-                    
+
                 default:
                     System.out.println("Opció invàlida. Intentant de nou...");
-                    continue; 
+                    continue;
             }
-            
-            //COMPROBAR SI GUANYA 
+
             if (nuevaPosicion >= 50) {
                 System.out.println("\n¡FELICITATS " + jugadorActual.getNom() + "! Has guanyat la partida!");
                 juegoTerminado = true;
             }
-            
-            //PASSAR DE TORN 
+
             turnoActual = (turnoActual + 1) % jugadores.size();
-            
             System.out.println("\nPrem ENTER per continuar...");
             s.nextLine();
         }
-        
-        //ACABAR PARTIDA TORNAR MAIN MENU 
+
         System.out.println("\nPartida finalitzada. Tornant al menú principal...");
         System.out.println("Prem ENTER per continuar...");
         s.nextLine();
