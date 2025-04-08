@@ -63,9 +63,6 @@ public class Main {
         s.close();
     }
     
-    /**
-     * Mostra les regles del joc a l'usuari
-     */
     private static void mostrarReglas() {
         System.out.println("\n=========================================");
         System.out.println("      REGLES DEL JOC DEL PINGÜÍ         ");
@@ -93,12 +90,6 @@ public class Main {
         main(new String[0]);  //TORNAR MENU INICI 
     }
     
-    /**
-     * Inicia la fase de joc principal
-     * @param partida La partida actual
-     * @param tauler El tauler de joc
-     * @param s L'scanner per entrada de l'usuari
-     */
     private static void iniciarFaseDeJuego(Partida partida, Tauler tauler, Scanner s) {
         ArrayList<Pingüino> jugadores = partida.getJugadors();
         int turnoActual = 0;
