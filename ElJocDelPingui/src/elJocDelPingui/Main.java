@@ -1,11 +1,60 @@
 package elJocDelPingui;
-import java.util.Scanner;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         int opcion = 0;
-        
+
+        // CONECTAR BASE DE DATOS
+        Connection con = Bdades.conectarBaseDatos();
+        String nombreUsuario = "";
+        String contrasena = "";
+
+        // LOGIN O REGISTRO
+        while (true) {
+            System.out.println("Vols fer login o registrar-te? (login/registro)");
+            String eleccio = s.nextLine();
+
+            System.out.print("Nom d'usuari: ");
+            nombreUsuario = s.nextLine();
+
+            System.out.print("Contrasenya: ");
+            contrasena = s.nextLine();
+
+            if (eleccio.equalsIgnoreCase("registro")) {
+                String sqlInsert = "INSERT INTO JUGADORES (NOMBRE_USUARIO, CONTRASENA) VALUES ('"
+                        + nombreUsuario + "', '" + contrasena + "')";
+                Bdades.insert(con, sqlInsert);
+                System.out.println("Usuari registrat correctament.");
+                break;
+
+            } else if (eleccio.equalsIgnoreCase("login")) {
+                String sqlLogin = "SELECT * FROM JUGADORES WHERE NOMBRE_USUARIO = '"
+                        + nombreUsuario + "' AND CONTRASENA = '" + contrasena + "'";
+                ResultSet rs = Bdades.select(con, sqlLogin);
+
+                try {
+                    if (rs != null && rs.next()) {
+                        System.out.println("Login correcte. Benvingut/da, " + nombreUsuario + "!");
+                        break;
+                    } else {
+                        System.out.println("Usuari o contrasenya incorrectes. Torna-ho a intentar.");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error durant el login: " + e.getMessage());
+                }
+
+            } else {
+                System.out.println("Opció no vàlida. Escriu 'login' o 'registro'.");
+            }
+        }
+
         // Mostrar menú principal
         System.out.println("=========================================");
         System.out.println("      BENVINGUTS AL JOC DEL PINGÜÍ       ");
@@ -14,47 +63,48 @@ public class Main {
         System.out.println("2. COM JUGAR I REGLES");
         System.out.println("3. SORTIR DEL JOC");
         System.out.println("-----------------------------------------");
-        
-        //BUCLE ENTRADES
+
+        // BUCLE ENTRADES
         while (true) {
             System.out.print("Escull una opció (1-3): ");
             if (s.hasNextInt()) {
                 opcion = s.nextInt();
-                s.nextLine(); // PASSAR SALT 
+                s.nextLine(); // PASSAR SALT
                 if (opcion >= 1 && opcion <= 3) {
-                    break; 
+                    break;
                 } else {
                     System.out.println("Sisplau ingressa un número entre 1 i 3.");
                 }
             } else {
                 System.out.println("Entrada no vàlida. Sisplau ingressa un número.");
-                s.nextLine(); //LLIMPIAR ENTRADA 
+                s.nextLine(); // LLIMPIAR ENTRADA
             }
         }
-        
+
         switch (opcion) {
             case 1:
-                										//CREAR PARTIDA 
+                // CREAR PARTIDA
                 Partida partida = new Partida();
                 partida.iniciarPartida();
-                
-                										//COMENÇAR PARTIDA COP FINALITZADA ENTRADA DE JUGADORS
+
+                // COMENÇAR PARTIDA COP FINALITZADA ENTRADA DE JUGADORS
                 if (!partida.getJugadors().isEmpty()) {
                     iniciarFaseDeJuego(partida, s);
                 }
                 break;
-                
+
             case 2:
                 mostrarReglas();
                 break;
-                
+
             case 3:
                 System.out.println("Sortint del joc. Fins aviat!");
                 break;
         }
-        
+
         s.close();
     }
+
     private static void mostrarReglas() {
         System.out.println("\n=========================================");
         System.out.println("      REGLES DEL JOC DEL PINGÜÍ         ");
@@ -76,17 +126,17 @@ public class Main {
         System.out.println("2. Tirar un dau especial (5-10 caselles) si en tens");
         System.out.println("3. Llançar boles de neu a un altre jugador per fer-lo retrocedir");
         System.out.println("\nPrem ENTER per tornar al menú principal...");
-        
+
         Scanner sc = new Scanner(System.in);
         sc.nextLine();
-        main(new String[0]);							//TORNAR MENU INICI 
+        main(new String[0]); // TORNAR MENU INICI
     }
+
     private static void iniciarFaseDeJuego(Partida partida, Scanner s) {
         ArrayList<Pingüino> jugadores = partida.getJugadors();
         int turnoActual = 0;
         boolean juegoTerminado = false;
-        
-     // Crear objeto dado para toda la partida
+
         Dado dado = new Dado();
 
         while (!juegoTerminado) {
@@ -96,7 +146,7 @@ public class Main {
             System.out.println("Torn de " + jugadorActual.getNom() + " (" + jugadorActual.getColor() + ")");
             System.out.println("Posició actual: " + jugadorActual.getPosicio());
             System.out.println("Inventari: " + jugadorActual.getInventario().toString());
-            dado.mostrarDadosEspeciales(); // Mostrar dados especiales del jugador
+            dado.mostrarDadosEspeciales();
             System.out.println("-----------------------------------------");
 
             System.out.println("Què vols fer?");
@@ -120,13 +170,13 @@ public class Main {
             int nuevaPosicion = jugadorActual.getPosicio();
 
             switch (accion) {
-                case 1: // Tirar dado básico
+                case 1:
                     int resultadoDado = dado.tirarDadoBasico();
                     nuevaPosicion = jugadorActual.avanzar(resultadoDado);
                     System.out.println("Has avançat " + resultadoDado + " caselles. Nova posició: " + nuevaPosicion);
                     break;
 
-                case 2: // Tirar dado especial
+                case 2:
                     if (dado.cantidadDadosEspeciales() > 0) {
                         dado.mostrarDadosEspeciales();
                         System.out.print("Escull quin dau especial vols usar (0-" + (dado.cantidadDadosEspeciales() - 1) + "): ");
@@ -150,7 +200,7 @@ public class Main {
                     }
                     break;
 
-                case 3: // Lanzar bola de nieve
+                case 3:
                     if (jugadorActual.getInventario().getbolesNeu() > 0) {
                         System.out.println("A quin jugador vols llançar la bola?");
                         for (int i = 0; i < jugadores.size(); i++) {
@@ -170,7 +220,7 @@ public class Main {
                                 jugadorActual.getInventario().setbolesNeu(jugadorActual.getInventario().getbolesNeu() - 1);
 
                                 System.out.println("Has llançat una bola de neu a " + jugadorObjetivo.getNom() +
-                                                   "! Retrocedeix 2 caselles a la posició " + jugadorObjetivo.getPosicio());
+                                        "! Retrocedeix 2 caselles a la posició " + jugadorObjetivo.getPosicio());
                             } else {
                                 System.out.println("Jugador invàlid. Intentant de nou...");
                                 continue;
