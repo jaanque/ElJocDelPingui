@@ -24,7 +24,7 @@ public class Tauler {
             caselles.add(new Casilla(i));
         }
         
-        // Generem els elements especials
+        										//GENERAR ELEMENTS ESPECIALS 
         generarElementsEspecials();
     }
     
@@ -95,7 +95,7 @@ public class Tauler {
     }
     
     public int trobarSeguentTrineu(int posicioActual) {
-        int propera = 50; // Valor per defecte (final del tauler)
+        int propera = 50; 
         for (Trineo trineu : posicionsTrineus) {
             if (trineu.getposiciotrineo() > posicioActual && trineu.getposiciotrineo() < propera) {
                 propera = trineu.getposiciotrineo();
@@ -105,7 +105,7 @@ public class Tauler {
     }
     
     public int trobarForatAnterior(int posicioActual) {
-        int anterior = 0; // Valor per defecte (inici del tauler)
+        int anterior = 0; //Inici per defecte 
         for (AgujeroHielo forat : posicionsForats) {
             if (forat.getposicio() < posicioActual && forat.getposicio() > anterior) {
                 anterior = forat.getposicio();
@@ -119,12 +119,12 @@ public class Tauler {
         int novaPosicio = jugador.avanzar(caselles);
         StringBuilder resultat = new StringBuilder("Has avançat " + caselles + " caselles. ");
         
-        // Comprovem si s'ha arribat o superat la meta
+        							// COMPROBEM SI GUANYA 
         if (novaPosicio >= 50) {
             return "Has arribat a la meta! Has guanyat la partida!";
         }
         
-        // Comprovem si hi ha un os
+        														//COMPROBEM SI HI HA OS 
         Oso os = hiHaOs(novaPosicio);
         if (os != null) {
             boolean retrocedeix = os.encontrarOso(jugador);
@@ -136,7 +136,7 @@ public class Tauler {
             return resultat.toString();
         }
         
-        // Comprovem si hi ha un forat
+        																// COMPROBEM SI HI HA FORAT 
         AgujeroHielo forat = hiHaForat(novaPosicio);
         if (forat != null) {
             int posicioForatAnterior = trobarForatAnterior(novaPosicio);
@@ -145,7 +145,7 @@ public class Tauler {
             return resultat.toString();
         }
         
-        // Comprovem si hi ha un trineu
+        																		//COMPROBEM SI HI HA TRINEU 
         Trineo trineu = hiHaTrineu(novaPosicio);
         if (trineu != null) {
             int posicioSeguentTrineu = trobarSeguentTrineu(novaPosicio);
@@ -158,7 +158,7 @@ public class Tauler {
             return resultat.toString();
         }
         
-        // Comprovem si hi ha un interrogant
+        																				//COMPROBEM SI HI HA CASELLA INTERROGANT 
         CasillaInterrogante interrogant = hiHaInterrogant(novaPosicio);
         if (interrogant != null) {
             String resultatEvent = interrogant.activarEvento(jugador);
@@ -166,45 +166,43 @@ public class Tauler {
             return resultat.toString();
         }
         
-        // Si no hi ha cap casella especial
+        																			// SI NO HI HA CASELLA ESPECIAL 
         resultat.append("Has arribat a una casella normal.");
         return resultat.toString();
     }
-    public void mostrarTauler() {
+    public void mostrarTauler(ArrayList<Pingüino> jugadors) {
         System.out.println("\n=== TAULER DEL JOC DEL PINGÜÍ ===");
         for (int i = 0; i < 50; i++) {
-            String casella = "[" + i + "]";
+            StringBuilder casella = new StringBuilder("[" + i + "]");
             
-            // Comprovem si hi ha elements especials a la casella
+            													// COMPROVACIÓ SI HI HA CASELLA "ESPECIAL"
             if (hiHaOs(i) != null) {
-                casella += "(Ós)";
+                casella.append("(Ós)");
             } 
             if (hiHaForat(i) != null) {
-                casella += "(Forat)";
+                casella.append("(Forat)");
             }
             if (hiHaTrineu(i) != null) {
-                casella += "(Trineu)";
+                casella.append("(Trineu)");
             }
             if (hiHaInterrogant(i) != null) {
-                casella += "(?)";
+                casella.append("(?)");
+            }
+            
+            																		//MOSTRAR JUGADORS EN POSICIÓ 
+            for (Pingüino jugador : jugadors) {
+                if (jugador.getPosicio() == i) {
+                    casella.append("(" + jugador.getColor().charAt(0) + ")");
+                }
             }
             
             System.out.print(casella + " ");
             
-            // Canviem de línia cada 10 caselles per millorar la visualització
+            											//CANVI DE LA LINEA CADA 10 CASELLES PER A QUE ES VEGUI MILLOR
             if ((i + 1) % 10 == 0) {
                 System.out.println();
             }
         }
         System.out.println("\n================================");
-    }
-    public ArrayList<Pingüino> jugadorsEnCasella(ArrayList<Pingüino> jugadors, int posicio) {
-        ArrayList<Pingüino> jugadorsEnCasella = new ArrayList<>();
-        for (Pingüino jugador : jugadors) {
-            if (jugador.getPosicio() == posicio) {
-                jugadorsEnCasella.add(jugador);
-            }
-        }
-        return jugadorsEnCasella;
     }
 }
