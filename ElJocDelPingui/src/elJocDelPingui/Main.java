@@ -1,5 +1,5 @@
 package elJocDelPingui;
-
+import elJocDelPingui.Bdades;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,12 +11,12 @@ public class Main {
         Scanner s = new Scanner(System.in);
         int opcion = 0;
 
-        // CONECTAR BASE DE DATOS
+        // CONECTAR BASE DE DADES
         Connection con = Bdades.conectarBaseDatos();
         String nombreUsuario = "";
         String contrasena = "";
 
-        // LOGIN O REGISTRO
+        // LOGIN O REGISTRE
         while (true) {
             System.out.println("Vols fer login o registrar-te? (login/registro)");
             String eleccio = s.nextLine();
