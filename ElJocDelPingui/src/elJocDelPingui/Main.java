@@ -10,9 +10,9 @@ public class Main {
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         int opcion = 0;
-
+        Connection con = null;
         // CONECTAR BASE DE DADES
-        Connection con = Bdades.conectarBaseDatos();
+        con = Bdades.conectarBaseDatos(con);
         String nombreUsuario = "";
         String contrasena = "";
 
@@ -28,15 +28,15 @@ public class Main {
             contrasena = s.nextLine();
 
             if (eleccio.equalsIgnoreCase("registro")) {
-                String sqlInsert = "INSERT INTO JUGADORES (NOMBRE_USUARIO, CONTRASENA) VALUES ('"
+                String sqlInsert = "INSERT INTO JUGADORES (NICKNAME, CONTRASENYA) VALUES ('"
                         + nombreUsuario + "', '" + contrasena + "')";
                 Bdades.insert(con, sqlInsert);
                 System.out.println("Usuari registrat correctament.");
                 break;
 
             } else if (eleccio.equalsIgnoreCase("login")) {
-                String sqlLogin = "SELECT * FROM JUGADORES WHERE NOMBRE_USUARIO = '"
-                        + nombreUsuario + "' AND CONTRASENA = '" + contrasena + "'";
+                String sqlLogin = "SELECT * FROM JUGADORES WHERE NICKNAME = '"
+                        + nombreUsuario + "' AND CONTRASENYA = '" + contrasena + "'";
                 ResultSet rs = Bdades.select(con, sqlLogin);
 
                 try {
