@@ -18,8 +18,8 @@ public class Bdades {
      * @return Objeto Connection si la conexión es exitosa, null en caso contrario. LA VARIABLE QUE DEVUELVE
      * LA TENEIS QUE GUARDAR PARA LAS DEMÁS FUNCIONES
      */
-	public static Connection conectarBaseDatos() {
-		Connection con = null;
+	public static Connection conectarBaseDatos(Connection con) {
+		
 
 		System.out.println("Intentando conectarse a la base de datos");
 		
@@ -34,16 +34,20 @@ public class Bdades {
 		String URL;
 		
 		if(s.equals("centro")) {
-			URL = "jdbc:oracle:thin:@192.168.3.26:1521:XEPDB2";
+			URL = "jdbc:oracle:thin:@192.168.3.26:1521/XEPDB2";
 		} else {
-			URL = "jdbc:oracle:thin:@oracle.ilerna.com:1521:XEPDB2";
+			URL = "jdbc:oracle:thin:@oracle.ilerna.com:1521/XEPDB2";
 		}
 		
-		System.out.println("¿Usuario?");
-		String USER = scan.nextLine();
+//		System.out.println("¿Usuario?");
+//		String USER = scan.nextLine();
+//		
+//		System.out.println("¿Contraseña?");
+//		String PWD = scan.nextLine();
 		
-		System.out.println("¿Contraseña?");
-		String PWD = scan.nextLine();
+		String USER = "DW2425_PIN_GRUP01";
+		
+		String PWD = "AFMSQ01";
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
