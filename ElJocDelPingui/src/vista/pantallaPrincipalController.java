@@ -67,7 +67,7 @@ public class pantallaPrincipalController {
         // Basic check (just for demo, replace with real login logic)
         if (!username.isEmpty() && !password.isEmpty()) {
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/pantallaJuego.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaJuego.fxml"));
                 Parent pantallaJuegoRoot = loader.load();
 
                 Scene pantallaJuegoScene = new Scene(pantallaJuegoRoot);
