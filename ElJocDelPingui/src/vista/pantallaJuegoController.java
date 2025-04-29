@@ -1,4 +1,4 @@
-package elJocDelPingui;
+package vista;
 
 import java.util.Random;
 
