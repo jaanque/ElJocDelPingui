@@ -42,7 +42,7 @@ public class Bdades {
 //		System.out.println("¿Usuario?");
 //		String USER = scan.nextLine();
 //		
-//		System.out.println("¿Contraseña?");
+//		System.out.println("¿Contraseña?"); //Quitar comentado
 //		String PWD = scan.nextLine();
 		
 		String USER = "DW2425_PIN_GRUP01";
