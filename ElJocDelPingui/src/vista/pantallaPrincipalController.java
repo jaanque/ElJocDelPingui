@@ -61,7 +61,7 @@ public class pantallaPrincipalController {
     private void handleLogin(ActionEvent event) {
         String username = userField.getText();
         String password = passField.getText();
-
+        
         System.out.println("Login pressed: " + username + " / " + password);
 
         // Basic check (just for demo, replace with real login logic)
@@ -89,5 +89,6 @@ public class pantallaPrincipalController {
     private void handleRegister() {
         System.out.println("Register pressed");
         // TODO
+        
     }
 }
