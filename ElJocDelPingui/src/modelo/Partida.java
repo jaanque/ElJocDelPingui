@@ -7,14 +7,24 @@ import java.util.Scanner;
 import controlador.Inventario;
 
 public class Partida {
+
+    // ==============================
+    // ATRIBUTS DE CLASSE
+    // ==============================
     private ArrayList<Pingüino> jugadors;
     private static final ArrayList<String> COLORS_DISPONIBLES = 
         new ArrayList<>(Arrays.asList("blau", "verd", "groc", "vermell"));
 
+    // ==============================
+    // CONSTRUCTOR
+    // ==============================
     public Partida() {
         this.jugadors = new ArrayList<>();
     }
 
+    // ==============================
+    // INICIAR LA PARTIDA I REGISTRAR ELS JUGADORS
+    // ==============================
     public void iniciarPartida() {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Quants jugadors volen jugar? ");
@@ -50,9 +60,9 @@ public class Partida {
                 }
             }
 
-          //CREAR JUGADOR I INICIAR EL SEU INVENTARI 
+            // CREAR JUGADOR I INICIAR EL SEU INVENTARI 
             Pingüino jugador = new Pingüino(nom, color);
-            jugador.setInventario(new Inventario(0, 0, 0)); //SENSE OBJECTES INICIA 
+            jugador.setInventario(new Inventario(0, 0, 0)); // SENSE OBJECTES INICIA 
             
             jugadors.add(jugador);
         }
@@ -61,6 +71,9 @@ public class Partida {
         mostrarJugadores();
     }
 
+    // ==============================
+    // MOSTRAR JUGADORS REGISTRATS
+    // ==============================
     public void mostrarJugadores() {
         System.out.println("\nJugadors de la partida:");
         System.out.println("-----------------------------------------");
@@ -70,6 +83,9 @@ public class Partida {
         System.out.println("-----------------------------------------");
     }
 
+    // ==============================
+    // GETTERS
+    // ==============================
     public ArrayList<Pingüino> getJugadors() {
         return jugadors;
     }
@@ -80,8 +96,12 @@ public class Partida {
                 return jugador;
             }
         }
-        return null; //NO JUGADOR = NULL 
+        return null; // NO JUGADOR = NULL 
     }
+
+    // ==============================
+    // FINALITZAR PARTIDA I MOSTRAR RESULTATS
+    // ==============================
     public void finalizarPartida() {
         System.out.println("\nLa partida ha finalitzat!");
         System.out.println("Resultats finals:");
@@ -90,3 +110,4 @@ public class Partida {
         }
     }
 }
+

@@ -12,19 +12,43 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import modelo.EventosJuego;
 
+// ==============================
+// CONTROLADOR DE LA PANTALLA DE JOC (FXML)
+// ==============================
 public class pantallaJuegoController {
 
+    // ==============================
+    // MENÚS
+    // ==============================
     @FXML private MenuItem newGame, saveGame, loadGame, quitGame;
-    @FXML private Button dado, rapido, lento, peces, nieve;
+
+    // ==============================
+    // BOTONS
+    // ==============================
+    @FXML private Button dado, rapido, lento, peces, nieve, reiniciar;
+
+    // ==============================
+    // TEXTOS
+    // ==============================
     @FXML private Text dadoResultText, rapido_t, lento_t, peces_t, nieve_t, eventos;
+
+    // ==============================
+    // TAULER I JUGADORS
+    // ==============================
     @FXML private GridPane tablero;
     @FXML private Circle P1, P2, P3, P4;
 
+    // ==============================
+    // JOC - POSICIÓ I TAULER
+    // ==============================
     private int p1Position = 0;
     private final int COLUMNS = 5;
     private final int ROWS = 10;
     private String[][] mapaEventos = new String[ROWS][COLUMNS];
 
+    // ==============================
+    // MÈTODE D'INICIALITZACIÓ DEL FXML
+    // ==============================
     @FXML
     private void initialize() {
         if (tablero == null) System.out.println("❌ tablero es null");
@@ -34,6 +58,9 @@ public class pantallaJuegoController {
         generarEventosAleatorios();
     }
 
+    // ==============================
+    // GENERAR POSICIONS ALEATÒRIES AMB ICONES D'ESDEVENIMENTS
+    // ==============================
     private void generarEventosAleatorios() {
         Random rand = new Random();
         String[] eventos = { "oso", "agujero", "trineo", "interrogante", "pez" };
@@ -57,6 +84,9 @@ public class pantallaJuegoController {
         }
     }
 
+    // ==============================
+    // MOVER PINGÜÍ 1 EN EL TAULER
+    // ==============================
     private void moveP1(int steps) {
         p1Position += steps;
         if (p1Position >= 50) p1Position = 49;
@@ -70,6 +100,9 @@ public class pantallaJuegoController {
         activarEventoEn(row, col);
     }
 
+    // ==============================
+    // ACTIVAR L'ESDEVENIMENT SEGONS POSICIÓ
+    // ==============================
     private void activarEventoEn(int fila, int columna) {
         String tipo = mapaEventos[fila][columna];
         if (tipo == null) return;
@@ -84,6 +117,9 @@ public class pantallaJuegoController {
         }
     }
 
+    // ==============================
+    // MOSTRAR ICONA D'ESDEVENIMENT EN EL TAULER
+    // ==============================
     private void mostrarIconoEvento(String ruta, int fila, int columna) {
         try {
             System.out.println("Cargando imagen desde: " + ruta);
@@ -104,19 +140,51 @@ public class pantallaJuegoController {
         }
     }
 
-    @FXML private void handleDado(ActionEvent event) {
+    // ==============================
+    // BOTÓ LLENÇAR DAU
+    // ==============================
+    @FXML
+    private void handleDado(ActionEvent event) {
         Random rand = new Random();
         int diceResult = rand.nextInt(6) + 1;
         dadoResultText.setText("Ha salido: " + diceResult);
         moveP1(diceResult);
     }
 
-    @FXML private void handleNewGame() { System.out.println("New game."); }
-    @FXML private void handleSaveGame() { System.out.println("Saved game."); }
-    @FXML private void handleLoadGame() { System.out.println("Loaded game."); }
-    @FXML private void handleQuitGame() { System.out.println("Exit..."); }
-    @FXML private void handleRapido() { System.out.println("Fast."); }
-    @FXML private void handleLento() { System.out.println("Slow."); }
-    @FXML private void handlePeces() { System.out.println("Fish."); }
-    @FXML private void handleNieve() { System.out.println("Snow."); }
+    // ==============================
+    // BOTONS DE MENÚ I ACCIONS SIMBÒLIQUES
+    // ==============================
+    @FXML private void handleNewGame()   { System.out.println("New game."); }
+    @FXML private void handleSaveGame()  { System.out.println("Saved game."); }
+    @FXML private void handleLoadGame()  { System.out.println("Loaded game."); }
+    @FXML private void handleQuitGame()  { System.out.println("Exit..."); }
+    @FXML private void handleRapido()    { System.out.println("Fast."); }
+    @FXML private void handleLento()     { System.out.println("Slow."); }
+    @FXML private void handlePeces()     { System.out.println("Fish."); }
+    @FXML private void handleNieve()     { System.out.println("Snow."); }
+
+    // ==============================
+    // REINICIAR EL JOC
+    // ==============================
+    @FXML
+    private void handleReiniciar() {
+        System.out.println("🔁 Reiniciando partida...");
+
+        tablero.getChildren().removeIf(node -> node instanceof ImageView);
+
+        p1Position = 0;
+        mapaEventos = new String[ROWS][COLUMNS];
+
+        GridPane.setRowIndex(P1, 0);
+        GridPane.setColumnIndex(P1, 0);
+
+        dadoResultText.setText("Ha salido: ");
+        rapido_t.setText("Dado rápido: 0");
+        lento_t.setText("Dado lento: 0");
+        peces_t.setText("Peces: 0");
+        nieve_t.setText("Bolas de nieve: 0");
+        eventos.setText("¡Nueva partida iniciada!");
+
+        generarEventosAleatorios();
+    }
 }
