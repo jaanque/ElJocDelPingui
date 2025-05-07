@@ -136,14 +136,20 @@
                      </HBox.margin>
                   </ScrollPane>
                   <AnchorPane minHeight="200.0" minWidth="300.0">
-                     <children>
-                        <Text fx:id="eventos" strokeType="OUTSIDE" strokeWidth="0.0" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </AnchorPane>
+   					<children>
+      				<Text fx:id="eventos" strokeType="OUTSIDE" strokeWidth="0.0" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Button fx:id="reiniciar" text="Reiniciar" onAction="#handleReiniciar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
+
                </children>
                <BorderPane.margin>
                   <Insets />

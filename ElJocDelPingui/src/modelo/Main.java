@@ -12,12 +12,17 @@ public class Main {
         Scanner s = new Scanner(System.in);
         int opcion = 0;
         Connection con = null;
-        // CONECTAR BASE DE DADES
+
+        // ==============================
+        // CONNEXIÓ A LA BASE DE DADES
+        // ==============================
         con = Bdades.conectarBaseDatos(con);
         String nombreUsuario = "";
         String contrasena = "";
 
-        // LOGIN O REGISTRE
+        // ==============================
+        // LOGIN O REGISTRE DE L'USUARI
+        // ==============================
         while (true) {
             System.out.println("Vols fer login o registrar-te? (login/registro)");
             String eleccio = s.nextLine();
@@ -56,7 +61,9 @@ public class Main {
             }
         }
 
-        // Mostrar menú principal
+        // ==============================
+        // MENÚ PRINCIPAL DEL JOC
+        // ==============================
         System.out.println("=========================================");
         System.out.println("      BENVINGUTS AL JOC DEL PINGÜÍ       ");
         System.out.println("=========================================");
@@ -65,7 +72,9 @@ public class Main {
         System.out.println("3. SORTIR DEL JOC");
         System.out.println("-----------------------------------------");
 
-        // BUCLE ENTRADES
+        // ==============================
+        // LECTURA I VALIDACIÓ DE L'OPCIÓ
+        // ==============================
         while (true) {
             System.out.print("Escull una opció (1-3): ");
             if (s.hasNextInt()) {
@@ -82,23 +91,36 @@ public class Main {
             }
         }
 
+        // ==============================
+        // ACCIÓ SEGONS L'OPCIÓ ESCOLLIDA
+        // ==============================
         switch (opcion) {
             case 1:
-                // CREAR PARTIDA
+                // ==============================
+                // CREAR I INICIAR PARTIDA
+                // ==============================
                 Partida partida = new Partida();
                 partida.iniciarPartida();
 
-                // COMENÇAR PARTIDA COP FINALITZADA ENTRADA DE JUGADORS
+                // ==============================
+                // COMENÇAR FASE DE JOC
+                // ==============================
                 if (!partida.getJugadors().isEmpty()) {
                     iniciarFaseDeJuego(partida, s);
                 }
                 break;
 
             case 2:
+                // ==============================
+                // MOSTRAR REGLES DEL JOC
+                // ==============================
                 mostrarReglas();
                 break;
 
             case 3:
+                // ==============================
+                // SORTIR DEL JOC
+                // ==============================
                 System.out.println("Sortint del joc. Fins aviat!");
                 break;
         }
@@ -106,6 +128,9 @@ public class Main {
         s.close();
     }
 
+    // ==============================
+    // MÈTODE PER MOSTRAR LES REGLES
+    // ==============================
     private static void mostrarReglas() {
         System.out.println("\n=========================================");
         System.out.println("      REGLES DEL JOC DEL PINGÜÍ         ");
@@ -133,6 +158,9 @@ public class Main {
         main(new String[0]); // TORNAR MENU INICI
     }
 
+    // ==============================
+    // FASE DE JOC - TORN A TORN
+    // ==============================
     private static void iniciarFaseDeJuego(Partida partida, Scanner s) {
         ArrayList<Pingüino> jugadores = partida.getJugadors();
         int turnoActual = 0;
@@ -150,6 +178,9 @@ public class Main {
             dado.mostrarDadosEspeciales();
             System.out.println("-----------------------------------------");
 
+            // ==============================
+            // MENÚ DE TORN DEL JUGADOR
+            // ==============================
             System.out.println("Què vols fer?");
             System.out.println("1. Tirar dau normal");
             if (dado.cantidadDadosEspeciales() > 0) {
@@ -170,6 +201,9 @@ public class Main {
 
             int nuevaPosicion = jugadorActual.getPosicio();
 
+            // ==============================
+            // ACCIONS DEL JUGADOR
+            // ==============================
             switch (accion) {
                 case 1:
                     int resultadoDado = dado.tirarDadoBasico();
@@ -241,19 +275,29 @@ public class Main {
                     continue;
             }
 
+            // ==============================
+            // COMPROVAR SI HA GUANYAT
+            // ==============================
             if (nuevaPosicion >= 50) {
                 System.out.println("\n¡FELICITATS " + jugadorActual.getNom() + "! Has guanyat la partida!");
                 juegoTerminado = true;
             }
 
+            // ==============================
+            // PASSAR AL SEGÜENT TORN
+            // ==============================
             turnoActual = (turnoActual + 1) % jugadores.size();
             System.out.println("\nPrem ENTER per continuar...");
             s.nextLine();
         }
 
+        // ==============================
+        // FI DE PARTIDA
+        // ==============================
         System.out.println("\nPartida finalitzada. Tornant al menú principal...");
         System.out.println("Prem ENTER per continuar...");
         s.nextLine();
         main(new String[0]);
     }
 }
+
