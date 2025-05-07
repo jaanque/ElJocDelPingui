@@ -164,7 +164,7 @@ public class pantallaJuegoController {
     @FXML private void handleNieve()     { System.out.println("Snow."); }
 
     // ==============================
-    // REINICIAR EL JOC
+    // REINICIAR EL JOC.
     // ==============================
     @FXML
     private void handleReiniciar() {
