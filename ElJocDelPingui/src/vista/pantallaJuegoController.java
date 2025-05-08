@@ -18,18 +18,14 @@ import modelo.EventosJuego;
 import java.net.URL;
 import java.util.Random;
 
-
 public class pantallaJuegoController {
-	
-	//daus
-	private int dadosRapidos = 0;
-	private int dadosLentos = 0;
 
-	private int contadorRapido = 0;
-	private int contadorLento = 0;            //PER ACTUALITZAR PANTALLA 
-	private int contadorPeces = 0;
-	private boolean turnoBloqueado = false;
-
+    private int dadosRapidos = 0;
+    private int dadosLentos = 0;
+    private int contadorRapido = 0;
+    private int contadorLento = 0;
+    private int contadorPeces = 0;
+    private boolean turnoBloqueado = false;
 
     @FXML private MenuItem newGame, saveGame, loadGame, quitGame;
     @FXML private Button dado, rapido, lento, peces, nieve, reiniciar, cambiarAvatarBtn;
@@ -43,6 +39,10 @@ public class pantallaJuegoController {
     private String[][] mapaEventos = new String[ROWS][COLUMNS];
     private Image avatarSeleccionado = null;
     private ImageView avatarView = null;
+
+    public void carregarPartida() {
+        System.out.println("🔄 S'està carregant la partida desada...");
+    }
 
     @FXML
     private void initialize() {
@@ -93,23 +93,12 @@ public class pantallaJuegoController {
         if (tipo == null) return;
 
         switch (tipo) {
-        case "oso":
-            EventosJuego.eventoOso(this);
-            break;
-        case "agujero":
-            EventosJuego.eventoAgujero(this);
-            break;
-        case "trineo":
-            EventosJuego.eventoTrineo(this);
-            break;
-        case "interrogante":
-            EventosJuego.eventoInterrogante(this);
-            break;
-        case "pez":
-            EventosJuego.eventoPez(this);
-            break;
-    }
-
+            case "oso": EventosJuego.eventoOso(this); break;
+            case "agujero": EventosJuego.eventoAgujero(this); break;
+            case "trineo": EventosJuego.eventoTrineo(this); break;
+            case "interrogante": EventosJuego.eventoInterrogante(this); break;
+            case "pez": EventosJuego.eventoPez(this); break;
+        }
     }
 
     public void tornarAlInici() {
@@ -142,7 +131,7 @@ public class pantallaJuegoController {
     private void handleDado(ActionEvent event) {
         if (turnoBloqueado) {
             eventos.setText("❌ Has perdut el torn per caure a un forat!");
-            turnoBloqueado = false; // es desbloqueja per al següent
+            turnoBloqueado = false;
             return;
         }
 
@@ -151,15 +140,13 @@ public class pantallaJuegoController {
         dadoResultText.setText("Ha salido: " + diceResult);
         moveP1(diceResult);
     }
-    
+
     @FXML
     private void handleRapido() {
         if (dadosRapidos > 0) {
             dadosRapidos--;
             rapido_t.setText("Dado rápido: " + dadosRapidos);
-
-            // Avança entre 5 i 10 caselles
-            int avan = new Random().nextInt(6) + 5; // [5,10]
+            int avan = new Random().nextInt(6) + 5;
             dadoResultText.setText("Rápido: avanzas " + avan + " casillas");
             moveP1(avan);
         } else {
@@ -172,17 +159,13 @@ public class pantallaJuegoController {
         if (dadosLentos > 0) {
             dadosLentos--;
             lento_t.setText("Dado lento: " + dadosLentos);
-
-            // Avança entre 1 i 3 caselles
-            int avan = new Random().nextInt(3) + 1; // [1,3]
+            int avan = new Random().nextInt(3) + 1;
             dadoResultText.setText("Lento: avanzas " + avan + " casillas");
             moveP1(avan);
         } else {
             mostrarInfo("No tienes dados lentos.");
         }
     }
-
-
 
     @FXML private void handleNewGame() { System.out.println("New game."); }
     @FXML private void handleSaveGame() { System.out.println("Saved game."); }
@@ -206,7 +189,6 @@ public class pantallaJuegoController {
 
         dadoResultText.setText("Ha salido: ");
 
-        // 🔁 Reiniciar daus especials
         dadosRapidos = 0;
         dadosLentos = 0;
         rapido_t.setText("Dado rápido: 0");
@@ -218,7 +200,6 @@ public class pantallaJuegoController {
 
         generarEventosAleatorios();
     }
-
 
     @FXML
     private void handleCambiarAvatar() {
@@ -282,12 +263,11 @@ public class pantallaJuegoController {
         tablero.getChildren().add(avatarView);
         P1.setVisible(false);
     }
-    
-    //PER A CLASE INTERROGANT
+
     public void avançarCaselles(int quantitat) {
         moveP1(quantitat);
     }
-    
+
     public void afegirDadoRapido() {
         contadorRapido++;
         rapido_t.setText("Dado rápido: " + contadorRapido);
@@ -302,9 +282,11 @@ public class pantallaJuegoController {
         contadorPeces++;
         peces_t.setText("Peces: " + contadorPeces);
     }
+
     public void bloquejarTorn() {
         turnoBloqueado = true;
     }
+
     private void mostrarInfo(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -312,7 +294,7 @@ public class pantallaJuegoController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
-    
+
     public void incrementarDadoLento() {
         dadosLentos++;
         lento_t.setText("Dado lento: " + dadosLentos);
@@ -322,7 +304,5 @@ public class pantallaJuegoController {
         dadosRapidos++;
         rapido_t.setText("Dado rápido: " + dadosRapidos);
     }
-
-
-}
+} 
 

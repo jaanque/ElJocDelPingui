@@ -1,3 +1,4 @@
+// pantallaPrincipalController.java (actualitzat)
 package vista;
 
 import javafx.fxml.FXML;
@@ -15,35 +16,19 @@ import java.sql.ResultSet;
 
 import controlador.Bdades;
 
-// ==============================
-// CONTROLADOR DE LA PANTALLA PRINCIPAL (LOGIN / REGISTRE)
-// ==============================
 public class pantallaPrincipalController {
-
-    // ==============================
-    // ELEMENTS DE LA INTERFÍCIE
-    // ==============================
     @FXML private TextField userField;
     @FXML private PasswordField passField;
     @FXML private Button loginButton;
 
-    // ==============================
-    // CONNEXIÓ A LA BASE DE DADES
-    // ==============================
     private Connection con;
 
-    // ==============================
-    // INICIALITZACIÓ DEL CONTROLADOR
-    // ==============================
     @FXML
     public void initialize() {
         System.out.println("pantallaPrincipalController initialized");
         con = Bdades.conectarBaseDatos(con);
     }
 
-    // ==============================
-    // ACCIÓ: INICIAR SESSIÓ
-    // ==============================
     @FXML
     private void handleLogin() {
         if (con == null) {
@@ -60,9 +45,7 @@ public class pantallaPrincipalController {
         try {
             if (rs != null && rs.next()) {
                 System.out.println("Login correcto. Bienvenido, " + usuario);
-
-                // CANVIAR A LA PANTALLA DE JOC
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaJuego.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaSeleccion.fxml"));
                 Parent root = loader.load();
                 Stage stage = (Stage) loginButton.getScene().getWindow();
                 stage.setScene(new Scene(root));
@@ -76,9 +59,6 @@ public class pantallaPrincipalController {
         }
     }
 
-    // ==============================
-    // ACCIÓ: REGISTRAR NOU USUARI
-    // ==============================
     @FXML
     private void handleRegister() {
         if (con == null) {
@@ -108,9 +88,6 @@ public class pantallaPrincipalController {
         }
     }
 
-    // ==============================
-    // MOSTRAR ERROR AMB ALERTA GRÀFICA
-    // ==============================
     private void mostrarError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
@@ -119,3 +96,4 @@ public class pantallaPrincipalController {
         alert.showAndWait();
     }
 }
+
