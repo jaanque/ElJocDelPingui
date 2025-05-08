@@ -18,7 +18,18 @@ import modelo.EventosJuego;
 import java.net.URL;
 import java.util.Random;
 
+
 public class pantallaJuegoController {
+	
+	//daus
+	private int dadosRapidos = 0;
+	private int dadosLentos = 0;
+
+	private int contadorRapido = 0;
+	private int contadorLento = 0;            //PER ACTUALITZAR PANTALLA 
+	private int contadorPeces = 0;
+	private boolean turnoBloqueado = false;
+
 
     @FXML private MenuItem newGame, saveGame, loadGame, quitGame;
     @FXML private Button dado, rapido, lento, peces, nieve, reiniciar, cambiarAvatarBtn;
@@ -82,11 +93,33 @@ public class pantallaJuegoController {
         if (tipo == null) return;
 
         switch (tipo) {
-            case "oso": EventosJuego.eventoOso(); break;
-            case "agujero": EventosJuego.eventoAgujero(); break;
-            case "trineo": EventosJuego.eventoTrineo(); break;
-            case "interrogante": EventosJuego.eventoInterrogante(); break;
-            case "pez": EventosJuego.eventoPez(); break;
+        case "oso":
+            EventosJuego.eventoOso(this);
+            break;
+        case "agujero":
+            EventosJuego.eventoAgujero(this);
+            break;
+        case "trineo":
+            EventosJuego.eventoTrineo(this);
+            break;
+        case "interrogante":
+            EventosJuego.eventoInterrogante(this);
+            break;
+        case "pez":
+            EventosJuego.eventoPez(this);
+            break;
+    }
+
+    }
+
+    public void tornarAlInici() {
+        p1Position = 0;
+        GridPane.setRowIndex(P1, 0);
+        GridPane.setColumnIndex(P1, 0);
+
+        if (avatarView != null) {
+            GridPane.setRowIndex(avatarView, 0);
+            GridPane.setColumnIndex(avatarView, 0);
         }
     }
 
@@ -107,18 +140,54 @@ public class pantallaJuegoController {
 
     @FXML
     private void handleDado(ActionEvent event) {
+        if (turnoBloqueado) {
+            eventos.setText("❌ Has perdut el torn per caure a un forat!");
+            turnoBloqueado = false; // es desbloqueja per al següent
+            return;
+        }
+
         Random rand = new Random();
         int diceResult = rand.nextInt(6) + 1;
         dadoResultText.setText("Ha salido: " + diceResult);
         moveP1(diceResult);
     }
+    
+    @FXML
+    private void handleRapido() {
+        if (dadosRapidos > 0) {
+            dadosRapidos--;
+            rapido_t.setText("Dado rápido: " + dadosRapidos);
+
+            // Avança entre 5 i 10 caselles
+            int avan = new Random().nextInt(6) + 5; // [5,10]
+            dadoResultText.setText("Rápido: avanzas " + avan + " casillas");
+            moveP1(avan);
+        } else {
+            mostrarInfo("No tienes dados rápidos.");
+        }
+    }
+
+    @FXML
+    private void handleLento() {
+        if (dadosLentos > 0) {
+            dadosLentos--;
+            lento_t.setText("Dado lento: " + dadosLentos);
+
+            // Avança entre 1 i 3 caselles
+            int avan = new Random().nextInt(3) + 1; // [1,3]
+            dadoResultText.setText("Lento: avanzas " + avan + " casillas");
+            moveP1(avan);
+        } else {
+            mostrarInfo("No tienes dados lentos.");
+        }
+    }
+
+
 
     @FXML private void handleNewGame() { System.out.println("New game."); }
     @FXML private void handleSaveGame() { System.out.println("Saved game."); }
     @FXML private void handleLoadGame() { System.out.println("Loaded game."); }
     @FXML private void handleQuitGame() { System.out.println("Exit..."); }
-    @FXML private void handleRapido() { System.out.println("Fast."); }
-    @FXML private void handleLento() { System.out.println("Slow."); }
     @FXML private void handlePeces() { System.out.println("Fish."); }
     @FXML private void handleNieve() { System.out.println("Snow."); }
 
@@ -136,14 +205,20 @@ public class pantallaJuegoController {
         avatarView = null;
 
         dadoResultText.setText("Ha salido: ");
+
+        // 🔁 Reiniciar daus especials
+        dadosRapidos = 0;
+        dadosLentos = 0;
         rapido_t.setText("Dado rápido: 0");
         lento_t.setText("Dado lento: 0");
+
         peces_t.setText("Peces: 0");
         nieve_t.setText("Bolas de nieve: 0");
         eventos.setText("¡Nueva partida iniciada!");
 
         generarEventosAleatorios();
     }
+
 
     @FXML
     private void handleCambiarAvatar() {
@@ -166,7 +241,7 @@ public class pantallaJuegoController {
 
             Image avatar = new Image(recurso.toExternalForm());
             ImageView miniatura = new ImageView(avatar);
-            miniatura.setFitWidth(120); // 300% más grande
+            miniatura.setFitWidth(120);
             miniatura.setFitHeight(120);
             miniatura.setPreserveRatio(true);
 
@@ -179,7 +254,7 @@ public class pantallaJuegoController {
             avatarBox.getChildren().add(miniatura);
         }
 
-        Scene scene = new Scene(avatarBox, 600, 200); // 300% más grande
+        Scene scene = new Scene(avatarBox, 600, 200);
         ventanaSeleccion.setScene(scene);
         ventanaSeleccion.show();
     }
@@ -190,7 +265,7 @@ public class pantallaJuegoController {
         if (avatarView != null) tablero.getChildren().remove(avatarView);
 
         avatarView = new ImageView(avatarSeleccionado);
-        double size = P1.getRadius() * 2 * 1.4; // 140% más grande
+        double size = P1.getRadius() * 2 * 1.4;
         avatarView.setFitWidth(size);
         avatarView.setFitHeight(size);
         avatarView.setPreserveRatio(true);
@@ -207,4 +282,47 @@ public class pantallaJuegoController {
         tablero.getChildren().add(avatarView);
         P1.setVisible(false);
     }
-} 
+    
+    //PER A CLASE INTERROGANT
+    public void avançarCaselles(int quantitat) {
+        moveP1(quantitat);
+    }
+    
+    public void afegirDadoRapido() {
+        contadorRapido++;
+        rapido_t.setText("Dado rápido: " + contadorRapido);
+    }
+
+    public void afegirDadoLento() {
+        contadorLento++;
+        lento_t.setText("Dado lento: " + contadorLento);
+    }
+
+    public void afegirPez() {
+        contadorPeces++;
+        peces_t.setText("Peces: " + contadorPeces);
+    }
+    public void bloquejarTorn() {
+        turnoBloqueado = true;
+    }
+    private void mostrarInfo(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+    
+    public void incrementarDadoLento() {
+        dadosLentos++;
+        lento_t.setText("Dado lento: " + dadosLentos);
+    }
+
+    public void incrementarDadoRapido() {
+        dadosRapidos++;
+        rapido_t.setText("Dado rápido: " + dadosRapidos);
+    }
+
+
+}
+

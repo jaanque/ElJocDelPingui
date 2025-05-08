@@ -1,37 +1,59 @@
 package modelo;
 
+import java.util.Random;
+
 import javafx.scene.control.Alert;
+import vista.pantallaJuegoController;
 
 public class EventosJuego {
 
-    public static void eventoOso() {
+    public static void eventoOso(pantallaJuegoController controlador) {
         System.out.println("🐻 Evento: Oso");
         mostrarAlerta("¡Has sido atacado por un oso!", "Vuelves al inicio del juego.");
-        // Aquí puedes añadir lógica para reiniciar la posición del jugador
+        controlador.tornarAlInici();
     }
 
-    public static void eventoAgujero() {
+    public static void eventoAgujero(pantallaJuegoController controlador) {
         System.out.println("🕳️ Evento: Agujero");
-        mostrarAlerta("¡Te has caído en un agujero!", "Pierdes un turno.");
-        // Puedes desactivar el botón de dado por un turno, por ejemplo
+        mostrarAlerta("¡Te has caído en un agujero!", "Perds el proper torn.");
+        controlador.bloquejarTorn();
     }
 
-    public static void eventoTrineo() {
+
+    public static void eventoTrineo(pantallaJuegoController controlador) {
         System.out.println("🛷 Evento: Trineo");
         mostrarAlerta("¡Has encontrado un trineo!", "Avanzas 3 casillas.");
-        // Retorna 3 si quieres mover automáticamente al jugador
+        controlador.avançarCaselles(3);
     }
 
-    public static void eventoInterrogante() {
+    public static void eventoInterrogante(pantallaJuegoController controlador) {
         System.out.println("❓ Evento: Interrogante");
-        mostrarAlerta("¡Evento aleatorio!", "Pasa algo inesperado...");
-        // Aquí puedes meter un Random para que llame a otro evento aleatorio
+
+        String[] possibles = {"pez", "dadoRapido", "dadoLento"};
+        Random rand = new Random();
+        String seleccionat = possibles[rand.nextInt(possibles.length)];
+
+        switch (seleccionat) {
+            case "pez":
+                mostrarAlerta("¡Evento aleatorio!", "Has trobat un PEIX!");
+                controlador.afegirPez();
+                break;
+            case "dadoRapido":
+                mostrarAlerta("¡Evento aleatorio!", "Has guanyat un DAU RÀPID!");
+                controlador.incrementarDadoRapido();
+                break;
+            case "dadoLento":
+                mostrarAlerta("¡Evento aleatorio!", "Has guanyat un DAU LENT!");
+                controlador.incrementarDadoLento();
+                break;
+        }
     }
 
-    public static void eventoPez() {
+
+    public static void eventoPez(pantallaJuegoController controlador) {
         System.out.println("🐟 Evento: Pez");
         mostrarAlerta("¡Has encontrado un pez!", "Ganas un objeto.");
-        // Aquí podrías sumar 1 al inventario de peces
+        controlador.afegirPez(); // Actualitza el comptador de peixos
     }
 
     private static void mostrarAlerta(String titulo, String mensaje) {

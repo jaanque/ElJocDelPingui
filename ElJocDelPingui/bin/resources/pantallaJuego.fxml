@@ -12,125 +12,128 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="vista.pantallaJuegoController">
 
-  <children>
+    <children>
 
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu text="File">
-          <items>
-            <MenuItem fx:id="newGame" text="New" />
-            <SeparatorMenuItem />
-            <MenuItem fx:id="saveGame" text="Save" />
-            <MenuItem fx:id="loadGame" text="Load" />
-            <SeparatorMenuItem />
-            <MenuItem fx:id="quitGame" text="Quit" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
+        <MenuBar VBox.vgrow="NEVER">
+            <menus>
+                <Menu text="File">
+                    <items>
+                        <MenuItem fx:id="newGame" text="New" />
+                        <SeparatorMenuItem />
+                        <MenuItem fx:id="saveGame" text="Save" />
+                        <MenuItem fx:id="loadGame" text="Load" />
+                        <SeparatorMenuItem />
+                        <MenuItem fx:id="quitGame" text="Quit" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
 
-    <BorderPane VBox.vgrow="ALWAYS">
+        <BorderPane VBox.vgrow="ALWAYS">
 
-      <center>
-        <GridPane fx:id="tablero"
-                  gridLinesVisible="true"
-                  maxWidth="Infinity"
-                  maxHeight="Infinity"
-                  BorderPane.alignment="CENTER">
+            <center>
+                <GridPane fx:id="tablero"
+                          gridLinesVisible="true"
+                          maxWidth="Infinity"
+                          maxHeight="Infinity"
+                          BorderPane.alignment="CENTER">
 
-          <columnConstraints>
-            <ColumnConstraints percentWidth="20" />
-            <ColumnConstraints percentWidth="20" />
-            <ColumnConstraints percentWidth="20" />
-            <ColumnConstraints percentWidth="20" />
-            <ColumnConstraints percentWidth="20" />
-          </columnConstraints>
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                        <ColumnConstraints percentWidth="20" />
+                    </columnConstraints>
 
-          <rowConstraints>
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-            <RowConstraints percentHeight="10" />
-          </rowConstraints>
+                    <rowConstraints>
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                        <RowConstraints percentHeight="10" />
+                    </rowConstraints>
 
-          <children>
-            <Text text="Start" GridPane.rowIndex="0" GridPane.columnIndex="0">
-              <font><Font size="30.0" /></font>
-            </Text>
-            <Text text="Finish" GridPane.rowIndex="9" GridPane.columnIndex="4">
-              <font><Font size="30.0" /></font>
-            </Text>
+                    <children>
+                        <Text text="Start" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                            <font><Font size="30.0" /></font>
+                        </Text>
+                        <Text text="Finish" GridPane.rowIndex="9" GridPane.columnIndex="4">
+                            <font><Font size="30.0" /></font>
+                        </Text>
 
-            <!-- Fichas -->
-            <Circle fx:id="P1" fill="BLUE" radius="37.5" stroke="BLACK" />
-            <Circle fx:id="P2" fill="RED" radius="37.5" stroke="BLACK" />
-            <Circle fx:id="P3" fill="GREEN" radius="37.5" stroke="BLACK" />
-            <Circle fx:id="P4" fill="YELLOW" radius="37.5" stroke="BLACK" />
-          </children>
+                        <!-- Fichas -->
+                        <Circle fx:id="P1" fill="BLUE" radius="37.5" stroke="BLACK" />
+                        <Circle fx:id="P2" fill="RED" radius="37.5" stroke="BLACK" />
+                        <Circle fx:id="P3" fill="GREEN" radius="37.5" stroke="BLACK" />
+                        <Circle fx:id="P4" fill="YELLOW" radius="37.5" stroke="BLACK" />
+                    </children>
 
-        </GridPane>
-      </center>
+                </GridPane>
+            </center>
 
-      <bottom>
-        <HBox BorderPane.alignment="CENTER">
-          <children>
+            <bottom>
+                <HBox BorderPane.alignment="CENTER">
+                    <children>
 
-            <!-- Columna 1 -->
-            <AnchorPane minHeight="200.0" minWidth="300.0">
-              <children>
-                <Text fx:id="dadoResultText" text="Ha salido: " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
-                  <font><Font size="32.0" /></font>
-                </Text>
-                <Button fx:id="dado" text="Dado" onAction="#handleDado" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="100.0">
-                  <font><Font size="25.0" /></font>
-                </Button>
-              </children>
-            </AnchorPane>
+                        <!-- Columna 1 -->
+                        <AnchorPane minHeight="200.0" minWidth="300.0">
+                            <children>
+                                <Text fx:id="dadoResultText" text="Ha salido: " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
+                                    <font><Font size="32.0" /></font>
+                                </Text>
+                                <Button fx:id="dado" text="Dado" onAction="#handleDado" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="100.0">
+                                    <font><Font size="25.0" /></font>
+                                </Button>
+                            </children>
+                        </AnchorPane>
 
-            <!-- Columna 2 -->
-            <ScrollPane minHeight="200.0" minWidth="680.0" vbarPolicy="NEVER">
-              <content>
-                <AnchorPane>
-                  <children>
-                    <Text fx:id="rapido_t" text="Dado rápido: 0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
-                    <Text fx:id="lento_t" text="Dado lento: 0" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
-                    <Text fx:id="peces_t" text="Peces: 0" AnchorPane.leftAnchor="500.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
-                    <Text fx:id="nieve_t" text="Bolas de nieve: 0" AnchorPane.leftAnchor="750.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
-                    <Button fx:id="rapido" text="Usar" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
-                    <Button fx:id="lento" text="Usar" AnchorPane.leftAnchor="290.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
-                    <Button fx:id="peces" text="Usar" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
-                    <Button fx:id="nieve" text="Usar" AnchorPane.leftAnchor="810.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
-                  </children>
-                </AnchorPane>
-              </content>
-            </ScrollPane>
+                        <!-- Columna 2 -->
+                        <ScrollPane minHeight="200.0" minWidth="680.0" vbarPolicy="NEVER">
+                            <content>
+                                <AnchorPane>
+                                    <children>
+                                        <Text fx:id="rapido_t" text="Dado rápido: 0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
+                                        <Text fx:id="lento_t" text="Dado lento: 0" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
+                                        <Text fx:id="peces_t" text="Peces: 0" AnchorPane.leftAnchor="500.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
+                                        <Text fx:id="nieve_t" text="Bolas de nieve: 0" AnchorPane.leftAnchor="750.0" AnchorPane.topAnchor="30.0"><font><Font size="30.0" /></font></Text>
 
-            <!-- Columna 3 -->
-            <AnchorPane minHeight="200.0" minWidth="300.0">
-              <children>
-                <Text fx:id="eventos" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
-                  <font><Font size="18.0" /></font>
-                </Text>
-                <Button fx:id="reiniciar" text="Reiniciar" onAction="#handleReiniciar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
-                  <font><Font size="20.0" /></font>
-                </Button>
-                <Button fx:id="cambiarAvatarBtn" text="Cambiar Avatar" onAction="#handleCambiarAvatar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="130.0">
-                  <font><Font size="18.0" /></font>
-                </Button>
-              </children>
-            </AnchorPane>
+                                        <!-- Botones Usar -->
+                                        <Button fx:id="rapido" text="Usar" onAction="#handleRapido" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
+                                        <Button fx:id="lento" text="Usar" onAction="#handleLento" AnchorPane.leftAnchor="290.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
+                                        <Button fx:id="peces" text="Usar" onAction="#handlePeces" AnchorPane.leftAnchor="505.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
+                                        <Button fx:id="nieve" text="Usar" onAction="#handleNieve" AnchorPane.leftAnchor="810.0" AnchorPane.topAnchor="90.0"><font><Font size="30.0" /></font></Button>
+                                    </children>
+                                </AnchorPane>
+                            </content>
+                        </ScrollPane>
 
-          </children>
-        </HBox>
-      </bottom>
+                        <!-- Columna 3 -->
+                        <AnchorPane minHeight="200.0" minWidth="300.0">
+                            <children>
+                                <Text fx:id="eventos" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
+                                    <font><Font size="18.0" /></font>
+                                </Text>
+                                <Button fx:id="reiniciar" text="Reiniciar" onAction="#handleReiniciar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
+                                    <font><Font size="20.0" /></font>
+                                </Button>
+                                <Button fx:id="cambiarAvatarBtn" text="Cambiar Avatar" onAction="#handleCambiarAvatar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="130.0">
+                                    <font><Font size="18.0" /></font>
+                                </Button>
+                            </children>
+                        </AnchorPane>
 
-    </BorderPane>
+                    </children>
+                </HBox>
+            </bottom>
 
-  </children>
+        </BorderPane>
+
+    </children>
 </VBox>
+
