@@ -7,8 +7,13 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="vista.pantallaJuegoController">
+<VBox prefWidth="1280.0" prefHeight="720.0"
+      xmlns="http://javafx.com/javafx/23.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="vista.pantallaJuegoController">
+
   <children>
+
     <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu text="File">
@@ -24,11 +29,15 @@
       </menus>
     </MenuBar>
 
-    <BorderPane>
+    <BorderPane VBox.vgrow="ALWAYS">
+
       <center>
-        <GridPane fx:id="tablero" gridLinesVisible="true" BorderPane.alignment="CENTER"
-                  VBox.vgrow="ALWAYS"
-                  maxWidth="Infinity" maxHeight="Infinity">
+        <GridPane fx:id="tablero"
+                  gridLinesVisible="true"
+                  maxWidth="Infinity"
+                  maxHeight="Infinity"
+                  BorderPane.alignment="CENTER">
+
           <columnConstraints>
             <ColumnConstraints percentWidth="20" />
             <ColumnConstraints percentWidth="20" />
@@ -36,6 +45,7 @@
             <ColumnConstraints percentWidth="20" />
             <ColumnConstraints percentWidth="20" />
           </columnConstraints>
+
           <rowConstraints>
             <RowConstraints percentHeight="10" />
             <RowConstraints percentHeight="10" />
@@ -57,18 +67,21 @@
               <font><Font size="30.0" /></font>
             </Text>
 
-            <!-- Fichas (Círculos clásicos) -->
-            <Circle fx:id="P1" fill="BLUE" radius="15.0" stroke="BLACK" />
-            <Circle fx:id="P2" fill="RED" radius="15.0" stroke="BLACK" />
-            <Circle fx:id="P3" fill="GREEN" radius="15.0" stroke="BLACK" />
-            <Circle fx:id="P4" fill="YELLOW" radius="15.0" stroke="BLACK" />
+            <!-- Fichas -->
+            <Circle fx:id="P1" fill="BLUE" radius="37.5" stroke="BLACK" />
+            <Circle fx:id="P2" fill="RED" radius="37.5" stroke="BLACK" />
+            <Circle fx:id="P3" fill="GREEN" radius="37.5" stroke="BLACK" />
+            <Circle fx:id="P4" fill="YELLOW" radius="37.5" stroke="BLACK" />
           </children>
+
         </GridPane>
       </center>
 
       <bottom>
         <HBox BorderPane.alignment="CENTER">
           <children>
+
+            <!-- Columna 1 -->
             <AnchorPane minHeight="200.0" minWidth="300.0">
               <children>
                 <Text fx:id="dadoResultText" text="Ha salido: " AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
@@ -80,6 +93,7 @@
               </children>
             </AnchorPane>
 
+            <!-- Columna 2 -->
             <ScrollPane minHeight="200.0" minWidth="680.0" vbarPolicy="NEVER">
               <content>
                 <AnchorPane>
@@ -97,16 +111,26 @@
               </content>
             </ScrollPane>
 
+            <!-- Columna 3 -->
             <AnchorPane minHeight="200.0" minWidth="300.0">
               <children>
-                <Text fx:id="eventos" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0"><font><Font size="18.0" /></font></Text>
-                <Button fx:id="reiniciar" text="Reiniciar" onAction="#handleReiniciar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0"><font><Font size="20.0" /></font></Button>
-                <Button fx:id="cambiarAvatarBtn" text="Cambiar Avatar" onAction="#handleCambiarAvatar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="130.0"><font><Font size="18.0" /></font></Button>
+                <Text fx:id="eventos" text="Evento ocurrido" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="30.0">
+                  <font><Font size="18.0" /></font>
+                </Text>
+                <Button fx:id="reiniciar" text="Reiniciar" onAction="#handleReiniciar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="80.0">
+                  <font><Font size="20.0" /></font>
+                </Button>
+                <Button fx:id="cambiarAvatarBtn" text="Cambiar Avatar" onAction="#handleCambiarAvatar" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="130.0">
+                  <font><Font size="18.0" /></font>
+                </Button>
               </children>
             </AnchorPane>
+
           </children>
         </HBox>
       </bottom>
+
     </BorderPane>
+
   </children>
 </VBox>
