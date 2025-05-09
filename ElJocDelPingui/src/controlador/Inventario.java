@@ -50,11 +50,11 @@ public class Inventario {
     // ==============================
     // SETTERS
     // ==============================
-    public void setbolesNeu(int bolesNeu) {
+    public void setBolesNeu(int bolesNeu) {
         this.bolesNeu = Math.min(bolesNeu, MAX_BOLES_NEU); 
     }
     
-    public void setdaus(int daus) {
+    public void setDaus(int daus) {
         this.daus = Math.min(daus, MAX_DAUS);
     }
     
