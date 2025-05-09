@@ -34,7 +34,7 @@ public class CasillaInterrogante extends Casilla {
                 }
                 
                 if (bolasDadas > 0) {
-                    jugador.getInventario().setbolesNeu(bolasActuales + bolasDadas);
+                    jugador.getInventario().setBolesNeu(bolasActuales + bolasDadas);
                     return "¡Has obtenido " + bolasDadas + " bolas de nieve!";
                 } else {
                     return activarEvento(jugador); // Si ya tiene 6 bolas, damos otro evento
@@ -44,7 +44,7 @@ public class CasillaInterrogante extends Casilla {
                 // Obtener un dado rápido (probabilidad baja)
                 if (random.nextInt(10) < 3) { // 30% de probabilidad
                     if (jugador.getInventario().getdaus() < 3) { // Máximo 3 dados
-                        jugador.getInventario().setdaus(jugador.getInventario().getdaus() + 1);
+                        jugador.getInventario().setDaus(jugador.getInventario().getdaus() + 1);
                         return "¡Has obtenido un dado rápido!";
                     } else {
                         return activarEvento(jugador); // Si ya tiene 3 dados, damos otro evento
@@ -57,7 +57,7 @@ public class CasillaInterrogante extends Casilla {
                 // Obtener un dado lento (probabilidad alta)
                 if (random.nextInt(10) < 7) { // 70% de probabilidad
                     if (jugador.getInventario().getdaus() < 3) { // Máximo 3 dados
-                        jugador.getInventario().setdaus(jugador.getInventario().getdaus() + 1);
+                        jugador.getInventario().setDaus(jugador.getInventario().getdaus() + 1);
                         return "¡Has obtenido un dado lento!";
                     } else {
                         return activarEvento(jugador); // Si ya tiene 3 dados, damos otro evento

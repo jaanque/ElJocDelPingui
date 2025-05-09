@@ -27,9 +27,9 @@ public class Pingüino {
     // ==============================
     public void actualitzarInventari(Inventario nuevoInventario) {
         if (nuevoInventario != null) {
-            this.inventario.setbolesNeu(nuevoInventario.getbolesNeu());  
+            this.inventario.setBolesNeu(nuevoInventario.getbolesNeu());  
             this.inventario.setPeixos(nuevoInventario.getpeixos());  
-            this.inventario.setdaus(nuevoInventario.getdaus());  
+            this.inventario.setDaus(nuevoInventario.getdaus());  
         }
     }
 
