@@ -1,6 +1,9 @@
-// pantallaPrincipalController.java (actualitzat)
+// pantallaPrincipalController.java
+// Controlador de la pantalla d'inici de sessió i registre d'usuaris
+
 package vista;
 
+// Imports per a interfície gràfica i base de dades
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,18 +20,28 @@ import java.sql.ResultSet;
 import controlador.Bdades;
 
 public class pantallaPrincipalController {
-    @FXML private TextField userField;
-    @FXML private PasswordField passField;
-    @FXML private Button loginButton;
 
-    private Connection con;
+    // ------------------------------
+    // Elements de la interfície (FXML)
+    // ------------------------------
+    @FXML private TextField userField;        // Camp per al nom d'usuari
+    @FXML private PasswordField passField;    // Camp per a la contrasenya
+    @FXML private Button loginButton;         // Botó d'inici de sessió
 
+    private Connection con;                   // Connexió a la base de dades
+
+    // ------------------------------
+    // Inicialització del controlador
+    // ------------------------------
     @FXML
     public void initialize() {
         System.out.println("pantallaPrincipalController initialized");
-        con = Bdades.conectarBaseDatos(con);
+        con = Bdades.conectarBaseDatos(con); // Estableix connexió amb la base de dades
     }
 
+    // ------------------------------
+    // Iniciar sessió amb credencials
+    // ------------------------------
     @FXML
     private void handleLogin() {
         if (con == null) {
@@ -39,25 +52,29 @@ public class pantallaPrincipalController {
         String usuario = userField.getText();
         String contrasena = passField.getText();
 
+        // Consulta SQL per comprovar credencials
         String sqlLogin = "SELECT * FROM JUGADORES WHERE NICKNAME = '" + usuario + "' AND CONTRASENYA = '" + contrasena + "'";
         ResultSet rs = Bdades.select(con, sqlLogin);
 
         try {
-        	if (rs != null && rs.next()) {
-        	    System.out.println("Login correcto. Bienvenido, " + usuario);
+            if (rs != null && rs.next()) {
+                // Usuari i contrasenya correctes
+                System.out.println("Login correcto. Bienvenido, " + usuario);
 
-        	    int idJugador = rs.getInt("ID_JUGADOR");
-        	    String nickname = rs.getString("NICKNAME");
+                int idJugador = rs.getInt("ID_JUGADOR");
+                String nickname = rs.getString("NICKNAME");
 
-        	    //Guardar sesión
-        	    controlador.Sessio.iniciarSessio(idJugador, nickname);
+                // Desa les dades de sessió
+                controlador.Sessio.iniciarSessio(idJugador, nickname);
 
-        	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaSeleccion.fxml"));
-        	    Parent root = loader.load();
-        	    Stage stage = (Stage) loginButton.getScene().getWindow();
-        	    stage.setScene(new Scene(root));
-        	    stage.show();
-        	} else {
+                // Carrega la següent pantalla (pantalla de selecció de partida)
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaSeleccion.fxml"));
+                Parent root = loader.load();
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
+            } else {
+                // Credencials incorrectes
                 mostrarError("Error de login", "Usuario o contraseña incorrectos.");
             }
         } catch (Exception e) {
@@ -66,6 +83,9 @@ public class pantallaPrincipalController {
         }
     }
 
+    // ------------------------------
+    // Registrar un nou usuari
+    // ------------------------------
     @FXML
     private void handleRegister() {
         if (con == null) {
@@ -76,10 +96,12 @@ public class pantallaPrincipalController {
         String usuario = userField.getText();
         String contrasena = passField.getText();
 
+        // Inserció del nou jugador a la base de dades
         String sqlInsert = "INSERT INTO JUGADORES (NICKNAME, CONTRASENYA) VALUES ('" + usuario + "', '" + contrasena + "')";
         try {
             int filasAfectadas = Bdades.insert(con, sqlInsert);
             if (filasAfectadas > 0) {
+                // Registre correcte
                 System.out.println("Registro correcto. Bienvenido, " + usuario);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Registro correcto");
@@ -95,6 +117,9 @@ public class pantallaPrincipalController {
         }
     }
 
+    // ------------------------------
+    // Mostrar missatges d'error
+    // ------------------------------
     private void mostrarError(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
