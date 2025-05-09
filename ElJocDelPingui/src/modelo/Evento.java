@@ -5,7 +5,7 @@ public class Evento {
 public class Motos {
 	//CLASE 
 	private int posicio;   		//Posició en el tauler
-	private Trineo Trineo;	//AGAFEMTRINEU 
+	private Trineo Trineo;	//AGAFEM TRINEU 
 	//CONSTRUCTOR 
 	public Motos(int posicio) {
 		this.posicio = posicio;  //Posió de casilla.

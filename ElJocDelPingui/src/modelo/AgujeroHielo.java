@@ -14,7 +14,7 @@ public AgujeroHielo(int posicio) {
 //GETTERS
 
 public int getposicio() {return posicio;}
-public boolean isforat()  {return forat;}
+public boolean isForat()  {return forat;}
 
 //SETTERS
 	
