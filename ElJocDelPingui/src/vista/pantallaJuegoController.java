@@ -1,5 +1,6 @@
 package vista;
 
+import controlador.GestorPartides;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
@@ -11,11 +12,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import modelo.EventosJuego;
+import java.sql.ResultSet;
+
 
 import java.net.URL;
+import java.sql.Connection;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class pantallaJuegoController {
@@ -26,6 +32,10 @@ public class pantallaJuegoController {
     private int contadorLento = 0;
     private int contadorPeces = 0;
     private boolean turnoBloqueado = false;
+
+    private Connection con;
+    private int idJugador;
+    private int idPartidaActual = -1;
 
     @FXML private MenuItem newGame, saveGame, loadGame, quitGame;
     @FXML private Button dado, rapido, lento, peces, nieve, reiniciar, cambiarAvatarBtn;
@@ -39,33 +49,68 @@ public class pantallaJuegoController {
     private String[][] mapaEventos = new String[ROWS][COLUMNS];
     private Image avatarSeleccionado = null;
     private ImageView avatarView = null;
+    private int contadorBolasNieve = 0;
 
-    public void carregarPartida() {
-        System.out.println("🔄 S'està carregant la partida desada...");
+    public void setDatosConexionYJugador(Connection con, int idJugador) {
+        this.con = con;
+        this.idJugador = idJugador;
+    }
+    
+    public void carregarPartidaDesDeBD(int idPartida) {
+        this.idPartidaActual = idPartida;
+        GestorPartides.carregar(con, this, idJugador, idPartida);
+    }
+
+    public void carregarPartida(int idPartida) {
+        GestorPartides.carregar(con, this, idJugador, idPartida);
     }
 
     @FXML
     private void initialize() {
+        ajustarInterficie75();
         eventos.setText("¡El juego ha comenzado!");
         generarEventosAleatorios();
     }
 
+    private void ajustarInterficie75() {
+        tablero.setScaleX(0.75);
+        tablero.setScaleY(0.75);
+        P1.setRadius(P1.getRadius() * 0.75);
+        P2.setRadius(P2.getRadius() * 0.75);
+        P3.setRadius(P3.getRadius() * 0.75);
+        P4.setRadius(P4.getRadius() * 0.75);
+        dadoResultText.setFont(new Font(24));
+        rapido_t.setFont(new Font(22));
+        lento_t.setFont(new Font(22));
+        peces_t.setFont(new Font(22));
+        nieve_t.setFont(new Font(22));
+        eventos.setFont(new Font(18));
+    }
+
     private void generarEventosAleatorios() {
         Random rand = new Random();
-        String[] eventos = {"oso", "agujero", "trineo", "interrogante", "pez"};
+        String[] eventos = {"oso", "agujero", "trineo", "interrogante", "pez", "agujeroHielo", "nieve"};
+
+        int totalPorTipo = 2;
 
         for (String evento : eventos) {
-            int fila, columna;
-            do {
-                fila = rand.nextInt(ROWS);
-                columna = rand.nextInt(COLUMNS);
-            } while (mapaEventos[fila][columna] != null || (fila == 0 && columna == 0) || (fila == 9 && columna == 4));
+            int colocados = 0;
+            while (colocados < totalPorTipo) {
+                int fila = rand.nextInt(ROWS);
+                int columna = rand.nextInt(COLUMNS);
+                if (mapaEventos[fila][columna] == null &&
+                    !(fila == 0 && columna == 0) &&
+                    !(fila == 9 && columna == 4)) {
 
-            mapaEventos[fila][columna] = evento;
-            String ruta = "/resources/" + evento + ".png";
-            URL recurso = getClass().getResource(ruta);
-            if (recurso != null) {
-                mostrarIconoEvento(recurso.toExternalForm(), fila, columna);
+                    mapaEventos[fila][columna] = evento;
+
+                    String ruta = "/resources/" + evento + ".png";
+                    URL recurso = getClass().getResource(ruta);
+                    if (recurso != null) {
+                        mostrarIconoEvento(recurso.toExternalForm(), fila, columna);
+                    }
+                    colocados++;
+                }
             }
         }
     }
@@ -98,6 +143,8 @@ public class pantallaJuegoController {
             case "trineo": EventosJuego.eventoTrineo(this); break;
             case "interrogante": EventosJuego.eventoInterrogante(this); break;
             case "pez": EventosJuego.eventoPez(this); break;
+            case "agujeroHielo": EventosJuego.eventoAgujeroHielo(this); break;
+            case "nieve": EventosJuego.eventoNieve(this); break;
         }
     }
 
@@ -127,22 +174,26 @@ public class pantallaJuegoController {
         }
     }
 
-    @FXML
-    private void handleDado(ActionEvent event) {
+    @FXML private void handleGuardarPartida() {
+        GestorPartides.guardar(con, this, idJugador, LocalDateTime.now());
+    }
+
+    @FXML private void handleCargarPartida() {
+        mostrarInfo("Usa la pantalla anterior per carregar una partida.");
+    }
+
+    @FXML private void handleDado(ActionEvent event) {
         if (turnoBloqueado) {
-            eventos.setText("❌ Has perdut el torn per caure a un forat!");
+            eventos.setText("❌ Has perdut el torn!");
             turnoBloqueado = false;
             return;
         }
-
-        Random rand = new Random();
-        int diceResult = rand.nextInt(6) + 1;
-        dadoResultText.setText("Ha salido: " + diceResult);
-        moveP1(diceResult);
+        int result = new Random().nextInt(6) + 1;
+        dadoResultText.setText("Ha salido: " + result);
+        moveP1(result);
     }
 
-    @FXML
-    private void handleRapido() {
+    @FXML private void handleRapido() {
         if (dadosRapidos > 0) {
             dadosRapidos--;
             rapido_t.setText("Dado rápido: " + dadosRapidos);
@@ -154,8 +205,7 @@ public class pantallaJuegoController {
         }
     }
 
-    @FXML
-    private void handleLento() {
+    @FXML private void handleLento() {
         if (dadosLentos > 0) {
             dadosLentos--;
             lento_t.setText("Dado lento: " + dadosLentos);
@@ -167,126 +217,37 @@ public class pantallaJuegoController {
         }
     }
 
-    @FXML private void handleNewGame() { System.out.println("New game."); }
-    @FXML private void handleSaveGame() { System.out.println("Saved game."); }
-    @FXML private void handleLoadGame() { System.out.println("Loaded game."); }
-    @FXML private void handleQuitGame() { System.out.println("Exit..."); }
-    @FXML private void handlePeces() { System.out.println("Fish."); }
-    @FXML private void handleNieve() { System.out.println("Snow."); }
+    @FXML private void handleNewGame() {}
+    @FXML private void handleLoadGame() {}
+    @FXML private void handleQuitGame() {}
+    @FXML private void handlePeces() {}
+    @FXML private void handleNieve() {}
 
     @FXML
     private void handleReiniciar() {
         tablero.getChildren().removeIf(node -> node instanceof ImageView);
         p1Position = 0;
         mapaEventos = new String[ROWS][COLUMNS];
-
         GridPane.setRowIndex(P1, 0);
         GridPane.setColumnIndex(P1, 0);
         P1.setVisible(true);
-
         avatarSeleccionado = null;
         avatarView = null;
-
         dadoResultText.setText("Ha salido: ");
-
-        dadosRapidos = 0;
-        dadosLentos = 0;
+        dadosRapidos = dadosLentos = contadorRapido = contadorLento = contadorPeces = 0;
         rapido_t.setText("Dado rápido: 0");
         lento_t.setText("Dado lento: 0");
-
         peces_t.setText("Peces: 0");
         nieve_t.setText("Bolas de nieve: 0");
         eventos.setText("¡Nueva partida iniciada!");
-
         generarEventosAleatorios();
     }
 
-    @FXML
-    private void handleCambiarAvatar() {
-        Stage ventanaSeleccion = new Stage();
-        ventanaSeleccion.setTitle("Selecciona un nuevo avatar");
-
-        HBox avatarBox = new HBox(20);
-        avatarBox.setPadding(new Insets(20));
-
-        String[] rutasAvatares = {
-            "/avatars/avatar1.png",
-            "/avatars/avatar2.png",
-            "/avatars/avatar3.png",
-            "/avatars/avatar4.png"
-        };
-
-        for (String ruta : rutasAvatares) {
-            URL recurso = getClass().getResource(ruta);
-            if (recurso == null) continue;
-
-            Image avatar = new Image(recurso.toExternalForm());
-            ImageView miniatura = new ImageView(avatar);
-            miniatura.setFitWidth(120);
-            miniatura.setFitHeight(120);
-            miniatura.setPreserveRatio(true);
-
-            miniatura.setOnMouseClicked(e -> {
-                avatarSeleccionado = avatar;
-                ventanaSeleccion.close();
-                colocarAvatarEnTablero();
-            });
-
-            avatarBox.getChildren().add(miniatura);
-        }
-
-        Scene scene = new Scene(avatarBox, 600, 200);
-        ventanaSeleccion.setScene(scene);
-        ventanaSeleccion.show();
-    }
-
-    private void colocarAvatarEnTablero() {
-        if (avatarSeleccionado == null) return;
-
-        if (avatarView != null) tablero.getChildren().remove(avatarView);
-
-        avatarView = new ImageView(avatarSeleccionado);
-        double size = P1.getRadius() * 2 * 1.4;
-        avatarView.setFitWidth(size);
-        avatarView.setFitHeight(size);
-        avatarView.setPreserveRatio(true);
-
-        GridPane.setHalignment(avatarView, HPos.CENTER);
-        GridPane.setValignment(avatarView, VPos.CENTER);
-
-        int row = p1Position / COLUMNS;
-        int col = p1Position % COLUMNS;
-
-        GridPane.setRowIndex(avatarView, row);
-        GridPane.setColumnIndex(avatarView, col);
-
-        tablero.getChildren().add(avatarView);
-        P1.setVisible(false);
-    }
-
-    public void avançarCaselles(int quantitat) {
-        moveP1(quantitat);
-    }
-
-    public void afegirDadoRapido() {
-        contadorRapido++;
-        rapido_t.setText("Dado rápido: " + contadorRapido);
-    }
-
-    public void afegirDadoLento() {
-        contadorLento++;
-        lento_t.setText("Dado lento: " + contadorLento);
-    }
-
-    public void afegirPez() {
-        contadorPeces++;
-        peces_t.setText("Peces: " + contadorPeces);
-    }
-
-    public void bloquejarTorn() {
-        turnoBloqueado = true;
-    }
-
+    public void avançarCaselles(int quantitat) { moveP1(quantitat); }
+    public void afegirDadoRapido() { contadorRapido++; rapido_t.setText("Dado rápido: " + contadorRapido); }
+    public void afegirDadoLento() { contadorLento++; lento_t.setText("Dado lento: " + contadorLento); }
+    public void afegirPez() { contadorPeces++; peces_t.setText("Peces: " + contadorPeces); }
+    public void bloquejarTorn() { turnoBloqueado = true; }
     private void mostrarInfo(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -304,5 +265,60 @@ public class pantallaJuegoController {
         dadosRapidos++;
         rapido_t.setText("Dado rápido: " + dadosRapidos);
     }
-} 
+    
+    public void incrementarBolaNieve() {
+        contadorBolasNieve++;
+        nieve_t.setText("Bolas de nieve: " + contadorBolasNieve);
+    }
+    
+    public static void guardar(Connection con, pantallaJuegoController controlador, int idJugador, LocalDateTime timestamp) {
+        int posicio = controlador.getP1Position();
+        String inventari = "R:" + controlador.getDadosRapidos() +
+                ",L:" + controlador.getDadosLentos() +
+                ",P:" + controlador.getPeces() +
+                ",N:" + controlador.getBolasNieve(); 
+        GestorPartides.guardarPartida(con, idJugador, posicio, inventari);
+    }
+    
+    public static void carregar(Connection con, pantallaJuegoController controlador, int idJugador, int idPartida) {
+        try {
+            ResultSet rs = GestorPartides.carregarPerId(con, idJugador, idPartida);
+            if (rs.next()) {
+                controlador.setP1Position(rs.getInt("POSICION_ACTUAL"));
 
+                String inventari = rs.getString("INVENTARIO");
+                if (inventari != null) {
+                    for (String part : inventari.split(",")) {
+                        String[] parell = part.split(":");
+                        switch (parell[0]) {
+                        case "R": controlador.setDadosRapidos(Integer.parseInt(parell[1])); break;
+                        case "L": controlador.setDadosLentos(Integer.parseInt(parell[1])); break;
+                        case "P": controlador.setPeces(Integer.parseInt(parell[1])); break;
+                        case "N": controlador.setBolasNieve(Integer.parseInt(parell[1])); break; // <--- afegit
+                        }
+                    }
+                }
+
+                controlador.actualitzarPosicioJugador();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    // GETTERS/SETTERS per guardar i carregar
+    public int getP1Position() { return p1Position; }
+    public void setP1Position(int pos) { p1Position = pos; }
+    public String[][] getMapaEventos() { return mapaEventos; }
+    public void setMapaEventos(String[][] mapa) { mapaEventos = mapa; }
+    public int getDadosRapidos() { return dadosRapidos; }
+    public void setDadosRapidos(int val) { dadosRapidos = val; }
+    public int getDadosLentos() { return dadosLentos; }
+    public void setDadosLentos(int val) { dadosLentos = val; }
+    public int getPeces() { return contadorPeces; }
+    public void setPeces(int val) { contadorPeces = val; }
+    public void actualitzarPosicioJugador() { moveP1(0); }
+    public int getBolasNieve() { return contadorBolasNieve; }
+    public void setBolasNieve(int val) { contadorBolasNieve = val; nieve_t.setText("Bolas de nieve: " + contadorBolasNieve);}
+}

@@ -43,14 +43,21 @@ public class pantallaPrincipalController {
         ResultSet rs = Bdades.select(con, sqlLogin);
 
         try {
-            if (rs != null && rs.next()) {
-                System.out.println("Login correcto. Bienvenido, " + usuario);
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaSeleccion.fxml"));
-                Parent root = loader.load();
-                Stage stage = (Stage) loginButton.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
-            } else {
+        	if (rs != null && rs.next()) {
+        	    System.out.println("Login correcto. Bienvenido, " + usuario);
+
+        	    int idJugador = rs.getInt("ID_JUGADOR");
+        	    String nickname = rs.getString("NICKNAME");
+
+        	    //Guardar sesión
+        	    controlador.Sessio.iniciarSessio(idJugador, nickname);
+
+        	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaSeleccion.fxml"));
+        	    Parent root = loader.load();
+        	    Stage stage = (Stage) loginButton.getScene().getWindow();
+        	    stage.setScene(new Scene(root));
+        	    stage.show();
+        	} else {
                 mostrarError("Error de login", "Usuario o contraseña incorrectos.");
             }
         } catch (Exception e) {
