@@ -22,13 +22,13 @@ public class main extends Application {
 
         // CARREGAR FXML DE LA PANTALLA PRINCIPAL
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaPrincipal.fxml"));
-	    Parent root = loader.load();
+	    Parent root = loader.load(); //Parent carrega toto el diseny i el guarda en root
 
         // CREAR I MOSTRAR L'ESCENA
 	    Scene scene = new Scene(root);
-	    primaryStage.setScene(scene);
-	    primaryStage.setTitle("El Juego del Pingüino");
-	    primaryStage.show();
+	    primaryStage.setScene(scene); //assigna escena
+	    primaryStage.setTitle("El Juego del Pingüino"); //fica/cambia titol de la finestra
+	    primaryStage.show();//la mostra
 	}
 
     // ==============================

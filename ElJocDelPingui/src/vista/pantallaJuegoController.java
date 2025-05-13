@@ -148,8 +148,8 @@ public class pantallaJuegoController {
 
 	    // Si hi ha un avatar personalitzat, també el mou a la mateixa posició
 	    if (avatarSeleccionado != null && avatarView != null) {
-	        GridPane.setRowIndex(avatarView, row);
-	        GridPane.setColumnIndex(avatarView, col);
+	        GridPane.setRowIndex(avatarView, row); //coloca en fila
+	        GridPane.setColumnIndex(avatarView, col);//coloca en columna
 	    }
 
 	    // Activa l'esdeveniment si hi ha un esdeveniment en aquesta casella
@@ -278,7 +278,7 @@ public class pantallaJuegoController {
 
                 // Eliminar l'avatar anterior si existeix
                 if (avatarView != null) {
-                    tablero.getChildren().remove(avatarView);
+                    tablero.getChildren().remove(avatarView);//nodes
                 }
 
                 // Amaguem la bola P1
