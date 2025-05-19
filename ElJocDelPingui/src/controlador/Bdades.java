@@ -20,6 +20,17 @@ public class Bdades {
 		Scanner scan = new Scanner(System.in);
 		String s = scan.nextLine();
 		s = s.toLowerCase();
+		
+		while (true) {
+		    System.out.println("Selecciona centro o fuera de centro: (CENTRO/FUERA)");
+		    s = scan.nextLine().trim().toLowerCase();
+
+		    if (s.equals("centro") || s.equals("fuera")) {
+		        break;
+		    } else {
+		        System.out.println("❌ Entrada no válida. Has de escollir 'centro' o 'fuera'. Torna-ho a intentar.");
+		    }
+		}
 
 		String URL;
 
