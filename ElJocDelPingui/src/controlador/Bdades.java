@@ -16,11 +16,9 @@ public class Bdades {
      */
 	public static Connection conectarBaseDatos(Connection con) {
 		System.out.println("Intentando conectarse a la base de datos");
-		System.out.println("Selecciona centro o fuera de centro: (CENTRO/FUERA)");
 		Scanner scan = new Scanner(System.in);
-		String s = scan.nextLine();
-		s = s.toLowerCase();
-		
+		String s = "";
+
 		while (true) {
 		    System.out.println("Selecciona centro o fuera de centro: (CENTRO/FUERA)");
 		    s = scan.nextLine().trim().toLowerCase();
@@ -28,7 +26,7 @@ public class Bdades {
 		    if (s.equals("centro") || s.equals("fuera")) {
 		        break;
 		    } else {
-		        System.out.println("❌ Entrada no válida. Has de escollir 'centro' o 'fuera'. Torna-ho a intentar.");
+		        System.out.println("❌ Entrada no válida. Has de escriure 'centro' o 'fuera'. Torna-ho a intentar.");
 		    }
 		}
 

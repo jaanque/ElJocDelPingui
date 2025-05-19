@@ -3,6 +3,7 @@ package modelo;
 import java.util.Random;
 import javafx.scene.control.Alert;
 import vista.pantallaJuegoController;
+import javafx.scene.control.ButtonType;
 
 public class EventosJuego {
 
@@ -11,9 +12,33 @@ public class EventosJuego {
 
     public static void eventoOso(pantallaJuegoController controlador) {
         System.out.println("🐻 Evento: Oso");
-        mostrarAlerta("¡Has sido atacado por un oso!", "Vuelves al inicio del juego.");
-        controlador.tornarAlInici();
+
+        if (controlador.getPeces() > 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("🐻 Oso hambriento");
+            alert.setHeaderText("¡Te has topado con un oso!");
+            alert.setContentText("¿Quieres darle un pez para evitar volver al inicio?");
+
+            ButtonType btnSi = new ButtonType("Sí, darle un pez");
+            ButtonType btnNo = new ButtonType("No, volver al inicio");
+
+            alert.getButtonTypes().setAll(btnSi, btnNo);
+
+            alert.showAndWait().ifPresent(resposta -> {
+                if (resposta == btnSi) {
+                    controlador.setPeces(controlador.getPeces() - 1);
+                    mostrarAlerta("¡Te salvaste!", "Le diste un pez al oso y te dejó pasar.");
+                } else {
+                    controlador.tornarAlInici();
+                    mostrarAlerta("¡Has sido atacado por un oso!", "Vuelves al inicio del juego.");
+                }
+            });
+        } else {
+            controlador.tornarAlInici();
+            mostrarAlerta("¡Has sido atacado por un oso!", "No tenías peces. Vuelves al inicio del juego.");
+        }
     }
+
 
     public static void eventoAgujero(pantallaJuegoController controlador) {
         System.out.println("🕳️ Evento: Agujero");

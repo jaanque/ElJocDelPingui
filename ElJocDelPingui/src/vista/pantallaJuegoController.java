@@ -101,31 +101,34 @@ public class pantallaJuegoController {
 	private void generarEventosAleatorios() {
 	    Random rand = new Random();
 	    String[] eventos = {"oso", "agujero", "trineo", "interrogante", "pez", "agujeroHielo", "nieve"};
-	    int totalPorTipo = 2; // Nombre d'aparicions de cada tipus d'esdeveniment
+	    int totalEventos = 25; 
 
-	    for (String evento : eventos) {
-	        int colocados = 0;
-	        while (colocados < totalPorTipo) {
-	            int fila = rand.nextInt(ROWS);
-	            int columna = rand.nextInt(COLUMNS);
-	            // No es col·loquen esdeveniments a l'inici ni a la meta
-	            if (mapaEventos[fila][columna] == null &&
-	                !(fila == 0 && columna == 0) &&
-	                !(fila == 9 && columna == 4)) {
+	    int colocados = 0;
+	    while (colocados < totalEventos) {
+	        int fila = rand.nextInt(ROWS);
+	        int columna = rand.nextInt(COLUMNS);
 
-	                mapaEventos[fila][columna] = evento;
+	        // Evitem la casella inicial i final
+	        if ((fila == 0 && columna == 0) || (fila == 9 && columna == 4)) continue;
 
-	                // Crea la ruta cap a la imatge de l'esdeveniment
-	                String ruta = "/resources/" + evento + ".png";
-	                URL recurso = getClass().getResource(ruta);
-	                if (recurso != null) {
-	                    mostrarIconoEvento(recurso.toExternalForm(), fila, columna); // Mostra l'icona al tauler
-	                }
-	                colocados++;
-	            }
+	        // Evitem sobreescriure un esdeveniment ja col·locat
+	        if (mapaEventos[fila][columna] != null) continue;
+
+	        // Triem un esdeveniment aleatori
+	        String evento = eventos[rand.nextInt(eventos.length)];
+	        mapaEventos[fila][columna] = evento;
+
+	        // Mostrem la icona al tauler
+	        String ruta = "/resources/" + evento + ".png";
+	        URL recurso = getClass().getResource(ruta);
+	        if (recurso != null) {
+	            mostrarIconoEvento(recurso.toExternalForm(), fila, columna);
 	        }
+
+	        colocados++;
 	    }
 	}
+
 
 	// Mou el jugador P1 un nombre determinat de caselles
 	private void moveP1(int steps) {
@@ -135,7 +138,11 @@ public class pantallaJuegoController {
 	    // Si supera o arriba a la darrera casella, es col·loca a la final i mostra guanyador
 	    if (p1Position >= 49) {
 	        p1Position = 49;
-	        mostrarGuanyador();
+
+	        // Deixem que el canvi visual es mostri primer
+	        javafx.application.Platform.runLater(() -> {
+	            mostrarGuanyador();
+	        });
 	    }
 
 	    // Calcula la fila i columna corresponent a la nova posició
@@ -218,11 +225,6 @@ public class pantallaJuegoController {
         GestorPartides.guardar(con, this, idJugador, LocalDateTime.now());
     }
 
-    // Mostra un avís indicant que la càrrega de partida es fa des d'una altra pantalla
-    @FXML private void handleCargarPartida() {
-        mostrarInfo("Usa la pantalla anterior per carregar una partida.");
-    }
-
     // Tirada de dau normal (1-6), si no ha perdut el torn
     @FXML private void handleDado(ActionEvent event) {
         if (turnoBloqueado) {
@@ -233,7 +235,10 @@ public class pantallaJuegoController {
         int result = new Random().nextInt(6) + 1;
         dadoResultText.setText("Ha salido: " + result);
         moveP1(result);
+
+        GestorPartides.guardar(con, this, idJugador, LocalDateTime.now());
     }
+
 
     // Usa un dau ràpid (5-10), si en té
     @FXML private void handleRapido() {
@@ -340,7 +345,14 @@ public class pantallaJuegoController {
     public void avançarCaselles(int quantitat) { moveP1(quantitat); }
     public void afegirDadoRapido() { contadorRapido++; rapido_t.setText("Dado rápido: " + contadorRapido); }
     public void afegirDadoLento() { contadorLento++; lento_t.setText("Dado lento: " + contadorLento); }
-    public void afegirPez() { contadorPeces++; peces_t.setText("Peces: " + contadorPeces); }
+    public void afegirPez() {
+        if (contadorPeces < 2) {
+            contadorPeces++;
+            peces_t.setText("Peces: " + contadorPeces);
+        } else {
+            mostrarInfo("Ya tienes el máximo de peces (2).");
+        }
+    }
     public void bloquejarTorn() { turnoBloqueado = true; }
 
     // Mostra un missatge emergent amb informació genèrica
@@ -354,20 +366,32 @@ public class pantallaJuegoController {
 
     // Afegeix un dau lent a l'inventari
     public void incrementarDadoLento() {
-        dadosLentos++;
-        lento_t.setText("Dado lento: " + dadosLentos);
+        if ((dadosRapidos + dadosLentos) < 3) {
+            dadosLentos++;
+            lento_t.setText("Dado lento: " + dadosLentos);
+        } else {
+            mostrarInfo("Inventario lleno: no puedes tener más de 3 dados.");
+        }
     }
 
     // Afegeix un dau ràpid a l'inventari
     public void incrementarDadoRapido() {
-        dadosRapidos++;
-        rapido_t.setText("Dado rápido: " + dadosRapidos);
+        if ((dadosRapidos + dadosLentos) < 3) {
+            dadosRapidos++;
+            rapido_t.setText("Dado rápido: " + dadosRapidos);
+        } else {
+            mostrarInfo("Inventario lleno: no puedes tener más de 3 dados.");
+        }
     }
 
     // Afegeix una bola de neu a l'inventari
     public void incrementarBolaNieve() {
-        contadorBolasNieve++;
-        nieve_t.setText("Bolas de nieve: " + contadorBolasNieve);
+        if (contadorBolasNieve < 6) {
+            contadorBolasNieve++;
+            nieve_t.setText("Bolas de nieve: " + contadorBolasNieve);
+        } else {
+            mostrarInfo("Ya tienes el máximo de bolas de nieve (6).");
+        }
     }
 
     // --- GUARDAR I CARREGAR ESTAT DE PARTIDA (estàtics) ---
@@ -422,4 +446,12 @@ public class pantallaJuegoController {
     public void actualitzarPosicioJugador() { moveP1(0); }
     public int getBolasNieve() { return contadorBolasNieve; }
     public void setBolasNieve(int val) { contadorBolasNieve = val; nieve_t.setText("Bolas de nieve: " + contadorBolasNieve); }
+    public int getIdPartidaActual() {
+        return idPartidaActual;
+    }
+
+    public void setIdPartidaActual(int idPartidaActual) {
+        this.idPartidaActual = idPartidaActual;
+    }
+
 }

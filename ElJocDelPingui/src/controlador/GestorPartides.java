@@ -92,8 +92,56 @@ public class GestorPartides {
         int posicio = controlador.getP1Position();
         String inventari = "R:" + controlador.getDadosRapidos() +
                            ",L:" + controlador.getDadosLentos() +
-                           ",P:" + controlador.getPeces();
-        guardarPartida(con, idJugador, posicio, inventari);
+                           ",P:" + controlador.getPeces() +
+                           ",N:" + controlador.getBolasNieve();
+
+        int idPartida = controlador.getIdPartidaActual();
+
+        if (idPartida == -1) {
+            // 🔸 No hi ha partida encara, fem INSERT a PARTIDAS i PARTIDAS_JUGADORES
+            try {
+                String insertPartida = "INSERT INTO PARTIDAS (FECHA, HORA, ESTADO_TABLERO) VALUES (?, ?, ?)";
+                PreparedStatement stmtPartida = con.prepareStatement(insertPartida, new String[]{"ID_PARTIDA"});
+
+                stmtPartida.setDate(1, java.sql.Date.valueOf(timestamp.toLocalDate()));
+                stmtPartida.setTime(2, java.sql.Time.valueOf(timestamp.toLocalTime()));
+                stmtPartida.setString(3, ""); // ESTADO_TABLERO si vols afegir-ho més endavant
+
+                stmtPartida.executeUpdate();
+                ResultSet rs = stmtPartida.getGeneratedKeys();
+
+                if (rs.next()) {
+                    idPartida = rs.getInt(1);
+                    controlador.setIdPartidaActual(idPartida); // ✅ Guardem l’ID a la sessió
+                }
+
+                String insertJugador = "INSERT INTO PARTIDAS_JUGADORES (ID_PARTIDA, ID_JUGADOR, POSICION_ACTUAL, INVENTARIO) VALUES (?, ?, ?, ?)";
+                PreparedStatement stmtJugador = con.prepareStatement(insertJugador);
+                stmtJugador.setInt(1, idPartida);
+                stmtJugador.setInt(2, idJugador);
+                stmtJugador.setInt(3, posicio);
+                stmtJugador.setString(4, inventari);
+                stmtJugador.executeUpdate();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            // 🔹 La partida ja existeix, fem UPDATE
+            try {
+                String update = "UPDATE PARTIDAS_JUGADORES SET POSICION_ACTUAL = ?, INVENTARIO = ? " +
+                                "WHERE ID_PARTIDA = ? AND ID_JUGADOR = ?";
+                PreparedStatement stmt = con.prepareStatement(update);
+                stmt.setInt(1, posicio);
+                stmt.setString(2, inventari);
+                stmt.setInt(3, idPartida);
+                stmt.setInt(4, idJugador);
+                stmt.executeUpdate();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // ✅ Mètode complet per carregar la partida al controlador

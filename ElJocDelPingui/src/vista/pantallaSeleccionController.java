@@ -59,7 +59,6 @@ public class pantallaSeleccionController {
         partidesJugador.clear();               // Neteja la llista actual
         comboPartides.getItems().clear();      // Neteja el desplegable
 
-        // Consulta SQL per obtenir les partides associades al jugador
         String sql = "SELECT pj.ID_PARTIDA, p.FECHA, p.HORA FROM PARTIDAS_JUGADORES pj " +
                      "JOIN PARTIDAS p ON pj.ID_PARTIDA = p.ID_PARTIDA " +
                      "WHERE pj.ID_JUGADOR = " + idJugador + " ORDER BY p.FECHA DESC, p.HORA DESC";
@@ -71,10 +70,9 @@ public class pantallaSeleccionController {
                 int id = rs.getInt("ID_PARTIDA");
                 String dataHora = rs.getString("FECHA") + " " + rs.getString("HORA");
 
-                // Crea l'objecte Partida i l’afegeix a la llista i al ComboBox
                 Partida partida = new Partida(id, dataHora);
                 partidesJugador.add(partida);
-                comboPartides.getItems().add("Partida del " + dataHora);
+                comboPartides.getItems().add("Partida del " + dataHora); // 👈 Aquí s’omple el ComboBox
             }
         } catch (Exception e) {
             e.printStackTrace();
