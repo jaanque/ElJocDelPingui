@@ -17,8 +17,7 @@ public class main extends Application {
     // ==============================
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		Connection con = null;
-        con = Bdades.conectarBaseDatos(con); // CONNEXIÓ A LA BASE DE DADES
+		Sessio.connexio = Bdades.conectarBaseDatos(null);
 
         // CARREGAR FXML DE LA PANTALLA PRINCIPAL
 	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/pantallaPrincipal.fxml"));

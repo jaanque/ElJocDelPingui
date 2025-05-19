@@ -36,7 +36,7 @@ public class pantallaPrincipalController {
     @FXML
     public void initialize() {
         System.out.println("pantallaPrincipalController initialized");
-        con = Bdades.conectarBaseDatos(con); // Estableix connexió amb la base de dades
+        con = controlador.Sessio.connexio; // Reutilitza la connexió creada al main
     }
 
     // ------------------------------

@@ -42,7 +42,7 @@ public class pantallaSeleccionController {
     @FXML
     public void initialize() {
         // Connecta amb la base de dades
-        con = Bdades.conectarBaseDatos(con);
+    	con = controlador.Sessio.connexio;
 
         // Obté les dades del jugador que ha iniciat sessió
         int idJugador = controlador.Sessio.getIdJugador();
