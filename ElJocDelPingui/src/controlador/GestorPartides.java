@@ -12,7 +12,7 @@ public class GestorPartides {
         try {
             String insertPartida = "INSERT INTO PARTIDAS (FECHA, HORA, ESTADO_TABLERO) VALUES (?, ?, ?)";
             PreparedStatement stmtPartida = con.prepareStatement(insertPartida, new String[]{"ID_PARTIDA"});
-
+            con.commit();
             LocalDateTime ahora = LocalDateTime.now();
             stmtPartida.setDate(1, java.sql.Date.valueOf(ahora.toLocalDate()));
             stmtPartida.setTime(2, java.sql.Time.valueOf(ahora.toLocalTime()));
@@ -149,10 +149,18 @@ public class GestorPartides {
 
     public static void carregar(Connection con, pantallaJuegoController controlador, int idJugador, int idPartida) {
         try {
-            ResultSet rs = carregarPerId(con, idJugador, idPartida);
-            if (rs != null && rs.next()) {
+            String sql = "SELECT pj.*, p.ESTADO_TABLERO FROM PARTIDAS_JUGADORES pj " +
+                         "JOIN PARTIDAS p ON pj.ID_PARTIDA = p.ID_PARTIDA " +
+                         "WHERE pj.ID_JUGADOR = ? AND pj.ID_PARTIDA = ?";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setInt(1, idJugador);
+            stmt.setInt(2, idPartida);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
                 controlador.setP1Position(rs.getInt("POSICION_ACTUAL"));
 
+                // Inventari
                 String inventari = rs.getString("INVENTARIO");
                 if (inventari != null) {
                     for (String part : inventari.split(",")) {
@@ -166,11 +174,10 @@ public class GestorPartides {
                     }
                 }
 
-                ResultSet rsPartida = con.createStatement().executeQuery(
-                        "SELECT ESTADO_TABLERO FROM PARTIDAS WHERE ID_PARTIDA = " + idPartida);
-                if (rsPartida.next()) {
-                    String estat = rsPartida.getString("ESTADO_TABLERO");
-                    controlador.deserialitzarMapaEventos(estat);
+                // 🧩 Recarregar esdeveniments
+                String estatTauler = rs.getString("ESTADO_TABLERO");
+                if (estatTauler != null && !estatTauler.isEmpty()) {
+                    controlador.deserialitzarMapaEventos(estatTauler);
                 }
 
                 controlador.actualitzarPosicioJugador();
