@@ -21,7 +21,7 @@
             <MenuItem fx:id="newGame" text="New" />
             <SeparatorMenuItem />
             <MenuItem fx:id="saveGame" text="Save" onAction="#handleGuardarPartida"/>
-            <MenuItem fx:id="loadGame" text="Load" onAction="#handleCargarPartida"/>
+            <!-- <MenuItem fx:id="loadGame" onAction="#handleCargarPartida" text="Carregar Partida" /> -->
             <SeparatorMenuItem />
             <MenuItem fx:id="quitGame" text="Quit" />
           </items>

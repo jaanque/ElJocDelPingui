@@ -16,7 +16,7 @@ public class GestorPartides {
             LocalDateTime ahora = LocalDateTime.now();
             stmtPartida.setDate(1, java.sql.Date.valueOf(ahora.toLocalDate()));
             stmtPartida.setTime(2, java.sql.Time.valueOf(ahora.toLocalTime()));
-            stmtPartida.setString(3, ""); // ESTADO_TABLERO es pot afegir després si serialitzes el mapa
+            stmtPartida.setString(3, "NO_DATA");
 
             stmtPartida.executeUpdate();
 
@@ -105,7 +105,7 @@ public class GestorPartides {
 
                 stmtPartida.setDate(1, java.sql.Date.valueOf(timestamp.toLocalDate()));
                 stmtPartida.setTime(2, java.sql.Time.valueOf(timestamp.toLocalTime()));
-                stmtPartida.setString(3, ""); // ESTADO_TABLERO si vols afegir-ho més endavant
+                stmtPartida.setString(3, "NO_DATA");
 
                 stmtPartida.executeUpdate();
                 ResultSet rs = stmtPartida.getGeneratedKeys();
