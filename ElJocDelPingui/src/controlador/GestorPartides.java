@@ -16,7 +16,8 @@ public class GestorPartides {
             LocalDateTime ahora = LocalDateTime.now();
             stmtPartida.setDate(1, java.sql.Date.valueOf(ahora.toLocalDate()));
             stmtPartida.setTime(2, java.sql.Time.valueOf(ahora.toLocalTime()));
-            stmtPartida.setString(3, "NO_DATA");
+            String estatTauler = controlador.serialitzarMapaEventos();
+            stmtPartida.setString(3, estatTauler);
 
             stmtPartida.executeUpdate();
 
@@ -105,7 +106,8 @@ public class GestorPartides {
 
                 stmtPartida.setDate(1, java.sql.Date.valueOf(timestamp.toLocalDate()));
                 stmtPartida.setTime(2, java.sql.Time.valueOf(timestamp.toLocalTime()));
-                stmtPartida.setString(3, "NO_DATA");
+                String estatTauler = controlador.serialitzarMapaEventos();
+                stmtPartida.setString(3, estatTauler);
 
                 stmtPartida.executeUpdate();
                 ResultSet rs = stmtPartida.getGeneratedKeys();

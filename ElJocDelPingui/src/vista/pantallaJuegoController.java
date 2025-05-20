@@ -394,7 +394,7 @@ public class pantallaJuegoController {
         }
     }
 
-    // --- GUARDAR I CARREGAR ESTAT DE PARTIDA (estàtics) ---
+    // --- GUARDAR I CARREGAR ESTAT DE PARTIDA ---
 
     public static void guardar(Connection con, pantallaJuegoController controlador, int idJugador, LocalDateTime timestamp) {
         int posicio = controlador.getP1Position();
@@ -428,6 +428,43 @@ public class pantallaJuegoController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    public String serialitzarMapaEventos() {
+        StringBuilder sb = new StringBuilder();
+        for (int fila = 0; fila < mapaEventos.length; fila++) {
+            for (int col = 0; col < mapaEventos[0].length; col++) {
+                String valor = mapaEventos[fila][col];
+                if (valor != null) {
+                    sb.append(fila).append(":").append(col).append("=").append(valor).append(";");
+                }
+            }
+        }
+        return sb.toString();
+    }
+    
+    public void deserialitzarMapaEventos(String dades) {
+        mapaEventos = new String[ROWS][COLUMNS]; // Reseteja
+
+        String[] entries = dades.split(";");
+        for (String entry : entries) {
+            if (entry.trim().isEmpty()) continue;
+            String[] parts = entry.split("=");
+            String[] coord = parts[0].split(":");
+
+            int fila = Integer.parseInt(coord[0]);
+            int col = Integer.parseInt(coord[1]);
+            String tipus = parts[1];
+
+            mapaEventos[fila][col] = tipus;
+
+            // Mostrem la icona al tauler
+            String ruta = "/resources/" + tipus + ".png";
+            URL recurso = getClass().getResource(ruta);
+            if (recurso != null) {
+                mostrarIconoEvento(recurso.toExternalForm(), fila, col);
+            }
         }
     }
 
