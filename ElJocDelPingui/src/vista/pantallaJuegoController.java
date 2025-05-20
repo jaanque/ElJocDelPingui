@@ -37,6 +37,7 @@ public class pantallaJuegoController {
 	private Connection con;                // Connexió a la base de dades
 	private int idJugador;                 // ID del jugador actiu
 	private int idPartidaActual = -1;      // ID de la partida carregada (si n’hi ha)
+	private boolean partidaCarregada = false;
 
 	// Elements de la interfície definits al FXML
 	@FXML private MenuItem newGame, saveGame, loadGame, quitGame;  // Menú superior
@@ -65,6 +66,7 @@ public class pantallaJuegoController {
 	// Carrega una partida específica de la base de dades
 	public void carregarPartidaDesDeBD(int idPartida) {
 	    this.idPartidaActual = idPartida;
+	    this.partidaCarregada = true; // Marquem que és una partida carregada
 	    GestorPartides.carregar(con, this, idJugador, idPartida);
 	}
 
@@ -76,9 +78,12 @@ public class pantallaJuegoController {
 	// Inicialització automàtica quan es carrega la vista (FXML)
 	@FXML
 	private void initialize() {
-	    ajustarInterficie75();                        // Redueix la mida de la interfície
-	    eventos.setText("¡El juego ha comenzado!");   // Missatge d’inici
-	    generarEventosAleatorios();                   // Genera els esdeveniments del tauler
+	    ajustarInterficie75();
+	    eventos.setText("¡El juego ha comenzado!");
+	    afegirNumerosCaselles();
+	    if (!partidaCarregada) {
+	        generarEventosAleatorios(); // ✅ Només si és nova partida
+	    }
 	}
 
 	// Ajusta visualment els elements de la interfície al 75% de la mida original
@@ -95,6 +100,23 @@ public class pantallaJuegoController {
 	    peces_t.setFont(new Font(22));
 	    nieve_t.setFont(new Font(22));
 	    eventos.setFont(new Font(18));
+	}
+	
+	private void afegirNumerosCaselles() {
+	    int contador = 1;
+	    for (int fila = 0; fila < ROWS; fila++) {
+	        for (int col = 0; col < COLUMNS; col++) {
+	            Label label = new Label(String.valueOf(contador));
+	            label.setStyle("-fx-text-fill: gray; -fx-font-size: 14px;");
+	            GridPane.setRowIndex(label, fila);
+	            GridPane.setColumnIndex(label, col);
+	            GridPane.setHalignment(label, HPos.RIGHT);   // Alineat a la dreta
+	            GridPane.setValignment(label, VPos.BOTTOM);  // Alineat a baix
+	            GridPane.setMargin(label, new Insets(0, 4, 2, 0)); // Una mica separat del cantó
+	            tablero.getChildren().add(label);
+	            contador++;
+	        }
+	    }
 	}
 
 	// Assigna de manera aleatòria esdeveniments a diferents caselles del tauler
