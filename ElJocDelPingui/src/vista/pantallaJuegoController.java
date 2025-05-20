@@ -402,7 +402,8 @@ public class pantallaJuegoController {
                 ",L:" + controlador.getDadosLentos() +
                 ",P:" + controlador.getPeces() +
                 ",N:" + controlador.getBolasNieve(); 
-        GestorPartides.guardarPartida(con, idJugador, posicio, inventari);
+        String estatTauler = controlador.serialitzarMapaEventos();
+        GestorPartides.guardarPartida(con, idJugador, posicio, inventari, estatTauler);
     }
 
     public static void carregar(Connection con, pantallaJuegoController controlador, int idJugador, int idPartida) {

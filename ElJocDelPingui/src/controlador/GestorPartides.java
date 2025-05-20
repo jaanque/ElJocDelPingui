@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class GestorPartides {
 
     // ✅ Guarda una nova partida a la base de dades
-    public static int guardarPartida(Connection con, int idJugador, int posicion, String inventario) {
+    public static int guardarPartida(Connection con, int idJugador, int posicion, String inventario, String estatTauler) {
         try {
             String insertPartida = "INSERT INTO PARTIDAS (FECHA, HORA, ESTADO_TABLERO) VALUES (?, ?, ?)";
             PreparedStatement stmtPartida = con.prepareStatement(insertPartida, new String[]{"ID_PARTIDA"});
@@ -16,7 +16,6 @@ public class GestorPartides {
             LocalDateTime ahora = LocalDateTime.now();
             stmtPartida.setDate(1, java.sql.Date.valueOf(ahora.toLocalDate()));
             stmtPartida.setTime(2, java.sql.Time.valueOf(ahora.toLocalTime()));
-            String estatTauler = controlador.serialitzarMapaEventos();
             stmtPartida.setString(3, estatTauler);
 
             stmtPartida.executeUpdate();
@@ -43,7 +42,6 @@ public class GestorPartides {
         }
     }
 
-    // ✅ Obté la partida més recent guardada per un jugador
     public static ResultSet cargarUltimaPartida(Connection con, int idJugador) {
         try {
             String sql = "SELECT pj.*, p.FECHA, p.HORA FROM PARTIDAS_JUGADORES pj " +
@@ -59,7 +57,6 @@ public class GestorPartides {
         }
     }
 
-    // ✅ Obté totes les partides guardades d’un jugador (per ComboBox)
     public static ResultSet obtenirPartidesJugador(Connection con, int idJugador) {
         try {
             String sql = "SELECT pj.ID_PARTIDA, p.FECHA, p.HORA FROM PARTIDAS_JUGADORES pj " +
@@ -75,7 +72,6 @@ public class GestorPartides {
         }
     }
 
-    // ✅ Carrega una partida específica pel seu ID
     public static ResultSet carregarPerId(Connection con, int idJugador, int idPartida) {
         try {
             String sql = "SELECT * FROM PARTIDAS_JUGADORES WHERE ID_JUGADOR = ? AND ID_PARTIDA = ?";
@@ -88,7 +84,7 @@ public class GestorPartides {
             return null;
         }
     }
-    
+
     public static void guardar(Connection con, pantallaJuegoController controlador, int idJugador, LocalDateTime timestamp) {
         int posicio = controlador.getP1Position();
         String inventari = "R:" + controlador.getDadosRapidos() +
@@ -96,17 +92,16 @@ public class GestorPartides {
                            ",P:" + controlador.getPeces() +
                            ",N:" + controlador.getBolasNieve();
 
+        String estatTauler = controlador.serialitzarMapaEventos();
         int idPartida = controlador.getIdPartidaActual();
 
         if (idPartida == -1) {
-            // 🔸 No hi ha partida encara, fem INSERT a PARTIDAS i PARTIDAS_JUGADORES
             try {
                 String insertPartida = "INSERT INTO PARTIDAS (FECHA, HORA, ESTADO_TABLERO) VALUES (?, ?, ?)";
                 PreparedStatement stmtPartida = con.prepareStatement(insertPartida, new String[]{"ID_PARTIDA"});
 
                 stmtPartida.setDate(1, java.sql.Date.valueOf(timestamp.toLocalDate()));
                 stmtPartida.setTime(2, java.sql.Time.valueOf(timestamp.toLocalTime()));
-                String estatTauler = controlador.serialitzarMapaEventos();
                 stmtPartida.setString(3, estatTauler);
 
                 stmtPartida.executeUpdate();
@@ -114,7 +109,7 @@ public class GestorPartides {
 
                 if (rs.next()) {
                     idPartida = rs.getInt(1);
-                    controlador.setIdPartidaActual(idPartida); // ✅ Guardem l’ID a la sessió
+                    controlador.setIdPartidaActual(idPartida);
                 }
 
                 String insertJugador = "INSERT INTO PARTIDAS_JUGADORES (ID_PARTIDA, ID_JUGADOR, POSICION_ACTUAL, INVENTARIO) VALUES (?, ?, ?, ?)";
@@ -130,23 +125,28 @@ public class GestorPartides {
             }
 
         } else {
-            // 🔹 La partida ja existeix, fem UPDATE
             try {
-                String update = "UPDATE PARTIDAS_JUGADORES SET POSICION_ACTUAL = ?, INVENTARIO = ? " +
-                                "WHERE ID_PARTIDA = ? AND ID_JUGADOR = ?";
-                PreparedStatement stmt = con.prepareStatement(update);
-                stmt.setInt(1, posicio);
-                stmt.setString(2, inventari);
-                stmt.setInt(3, idPartida);
-                stmt.setInt(4, idJugador);
-                stmt.executeUpdate();
+                String updateJugador = "UPDATE PARTIDAS_JUGADORES SET POSICION_ACTUAL = ?, INVENTARIO = ? " +
+                                       "WHERE ID_PARTIDA = ? AND ID_JUGADOR = ?";
+                PreparedStatement stmtJugador = con.prepareStatement(updateJugador);
+                stmtJugador.setInt(1, posicio);
+                stmtJugador.setString(2, inventari);
+                stmtJugador.setInt(3, idPartida);
+                stmtJugador.setInt(4, idJugador);
+                stmtJugador.executeUpdate();
+
+                String updatePartida = "UPDATE PARTIDAS SET ESTADO_TABLERO = ? WHERE ID_PARTIDA = ?";
+                PreparedStatement stmtPartida = con.prepareStatement(updatePartida);
+                stmtPartida.setString(1, estatTauler);
+                stmtPartida.setInt(2, idPartida);
+                stmtPartida.executeUpdate();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    // ✅ Mètode complet per carregar la partida al controlador
     public static void carregar(Connection con, pantallaJuegoController controlador, int idJugador, int idPartida) {
         try {
             ResultSet rs = carregarPerId(con, idJugador, idPartida);
@@ -161,8 +161,16 @@ public class GestorPartides {
                             case "R": controlador.setDadosRapidos(Integer.parseInt(parell[1])); break;
                             case "L": controlador.setDadosLentos(Integer.parseInt(parell[1])); break;
                             case "P": controlador.setPeces(Integer.parseInt(parell[1])); break;
+                            case "N": controlador.setBolasNieve(Integer.parseInt(parell[1])); break;
                         }
                     }
+                }
+
+                ResultSet rsPartida = con.createStatement().executeQuery(
+                        "SELECT ESTADO_TABLERO FROM PARTIDAS WHERE ID_PARTIDA = " + idPartida);
+                if (rsPartida.next()) {
+                    String estat = rsPartida.getString("ESTADO_TABLERO");
+                    controlador.deserialitzarMapaEventos(estat);
                 }
 
                 controlador.actualitzarPosicioJugador();
